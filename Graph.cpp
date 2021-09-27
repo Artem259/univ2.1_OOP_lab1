@@ -74,7 +74,31 @@ void VectorGraph<T_vertices, T_edges>::delEdge(unsigned from, unsigned to)
 }
 
 template <class T_vertices, class T_edges>
-std::string VectorGraph<T_vertices, T_edges>::toString()
+bool VectorGraph<T_vertices, T_edges>::checkEdge(unsigned from, unsigned to)
+{
+    assert(from<verticesN && to<verticesN);
+    if(edges[from][to]) return true;
+    return false;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<std::vector<bool>> VectorGraph<T_vertices, T_edges>::getMatrix()
+{
+    std::vector<std::vector<bool>> res;
+    for(auto &row: edges)
+    {
+        res.emplace_back();
+        for(auto &col: row)
+        {
+            if(col) res.back().push_back(true);
+            else res.back().push_back(false);
+        }
+    }
+    return res;
+}
+
+template <class T_vertices, class T_edges>
+std::string VectorGraph<T_vertices, T_edges>::getStringMatrix()
 {
     std::string res;
     for(auto &row: edges)

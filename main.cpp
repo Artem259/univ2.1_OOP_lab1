@@ -11,8 +11,9 @@ int main()
     CLass.addEdge(0,2,100);
     CLass.addEdge(0,1,200);
     CLass.addEdge(0,0,300);
-    CLass(0,2)++;
-    CLass(0,2)=CLass(0,0)-CLass(0,1)+CLass(0,2)+CLass(2);
-    std::cout<< CLass(0,2);
+    CLass.addEdge(1,1,100);
+    CLass.addEdge(1,2,100);
+    auto resBool = CLass.getMatrix();
+    auto resString = CLass.getStringMatrix();
     return 0;
 }
