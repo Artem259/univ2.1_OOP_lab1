@@ -27,7 +27,14 @@ void VectorGraph<T_vertices, T_edges>::addVertex(T_vertices data)
 template <class T_vertices, class T_edges>
 void VectorGraph<T_vertices, T_edges>::delVertex(unsigned vertex)
 {
-
+    assert(vertex<verticesN);
+    vertices.erase(vertices.begin()+vertex);
+    edges.erase(edges.begin()+vertex);
+    for(auto i = edges.begin(); i < edges.end(); i++)
+    {
+        (*i).erase((*i).begin()+vertex);
+    }
+    verticesN--;
 }
 
 template <class T_vertices, class T_edges>
