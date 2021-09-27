@@ -4,7 +4,7 @@
 
 int main()
 {
-    VectorGraph<int, int> CLass;
+    MatrixGraph<int, int> CLass;
     CLass.addVertex(10);
     CLass.addVertex(11);
     CLass.addVertex(12);
@@ -12,8 +12,11 @@ int main()
     CLass.addEdge(0,1,200);
     CLass.addEdge(0,0,300);
     CLass.addEdge(1,1,100);
-    CLass.addEdge(1,2,100);
-    auto resBool = CLass.getMatrix();
-    auto resString = CLass.getStringMatrix();
+    std::cout<< CLass.checkEdge(0,2)<<std::endl;
+    std::cout<< CLass.checkEdge(0,1)<<std::endl;
+    std::cout<< CLass.checkEdge(0,0)<<std::endl;
+    std::cout<< CLass.checkEdge(1,1)<<std::endl;
+    std::cout<< CLass.checkEdge(1,2)<<std::endl;
+    std::cout<< CLass.size();
     return 0;
 }

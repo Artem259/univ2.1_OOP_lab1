@@ -5,7 +5,7 @@
 
 
 template <class T_vertices, class T_edges>
-VectorGraph<T_vertices, T_edges>::VectorGraph()
+MatrixGraph<T_vertices, T_edges>::MatrixGraph()
 {
     verticesN = 0;
     vertices = {};
@@ -13,7 +13,7 @@ VectorGraph<T_vertices, T_edges>::VectorGraph()
 }
 
 template <class T_vertices, class T_edges>
-VectorGraph<T_vertices, T_edges>::~VectorGraph()
+MatrixGraph<T_vertices, T_edges>::~MatrixGraph()
 {
     for(auto &row: edges)
     {
@@ -25,7 +25,7 @@ VectorGraph<T_vertices, T_edges>::~VectorGraph()
 }
 
 template <class T_vertices, class T_edges>
-void VectorGraph<T_vertices, T_edges>::addVertex(T_vertices data)
+void MatrixGraph<T_vertices, T_edges>::addVertex(T_vertices data)
 {
     vertices.push_back(data);
     edges.push_back(std::vector<T_edges*> (edges.size()+1, nullptr));
@@ -37,7 +37,7 @@ void VectorGraph<T_vertices, T_edges>::addVertex(T_vertices data)
 }
 
 template <class T_vertices, class T_edges>
-void VectorGraph<T_vertices, T_edges>::delVertex(unsigned vertex)
+void MatrixGraph<T_vertices, T_edges>::delVertex(unsigned vertex)
 {
     assert(vertex<verticesN);
     vertices.erase(vertices.begin()+vertex); //erasing vertex (with data)
@@ -57,7 +57,7 @@ void VectorGraph<T_vertices, T_edges>::delVertex(unsigned vertex)
 }
 
 template <class T_vertices, class T_edges>
-void VectorGraph<T_vertices, T_edges>::addEdge(unsigned from, unsigned to, T_edges data)
+void MatrixGraph<T_vertices, T_edges>::addEdge(unsigned from, unsigned to, T_edges data)
 {
     assert(from<verticesN && to<verticesN);
     assert(!edges[from][to]);
@@ -65,7 +65,7 @@ void VectorGraph<T_vertices, T_edges>::addEdge(unsigned from, unsigned to, T_edg
 }
 
 template <class T_vertices, class T_edges>
-void VectorGraph<T_vertices, T_edges>::delEdge(unsigned from, unsigned to)
+void MatrixGraph<T_vertices, T_edges>::delEdge(unsigned from, unsigned to)
 {
     assert(from<verticesN && to<verticesN);
     assert(edges[from][to]);
@@ -74,7 +74,7 @@ void VectorGraph<T_vertices, T_edges>::delEdge(unsigned from, unsigned to)
 }
 
 template <class T_vertices, class T_edges>
-bool VectorGraph<T_vertices, T_edges>::checkEdge(unsigned from, unsigned to)
+bool MatrixGraph<T_vertices, T_edges>::checkEdge(unsigned from, unsigned to)
 {
     assert(from<verticesN && to<verticesN);
     if(edges[from][to]) return true;
@@ -82,7 +82,13 @@ bool VectorGraph<T_vertices, T_edges>::checkEdge(unsigned from, unsigned to)
 }
 
 template <class T_vertices, class T_edges>
-std::vector<std::vector<bool>> VectorGraph<T_vertices, T_edges>::getMatrix()
+unsigned MatrixGraph<T_vertices, T_edges>::size()
+{
+    return verticesN;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<std::vector<bool>> MatrixGraph<T_vertices, T_edges>::getMatrix()
 {
     std::vector<std::vector<bool>> res;
     for(auto &row: edges)
@@ -98,7 +104,7 @@ std::vector<std::vector<bool>> VectorGraph<T_vertices, T_edges>::getMatrix()
 }
 
 template <class T_vertices, class T_edges>
-std::string VectorGraph<T_vertices, T_edges>::getStringMatrix()
+std::string MatrixGraph<T_vertices, T_edges>::getStringMatrix()
 {
     std::string res;
     for(auto &row: edges)
@@ -114,14 +120,14 @@ std::string VectorGraph<T_vertices, T_edges>::getStringMatrix()
 }
 
 template <class T_vertices, class T_edges>
-T_vertices& VectorGraph<T_vertices, T_edges>::operator()(unsigned vertex)
+T_vertices& MatrixGraph<T_vertices, T_edges>::operator()(unsigned vertex)
 {
     assert(vertex<verticesN);
     return vertices[vertex];
 }
 
 template <class T_vertices, class T_edges>
-T_edges& VectorGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to)
+T_edges& MatrixGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to)
 {
     assert(from<verticesN && to<verticesN);
     assert(edges[from][to]);
@@ -129,4 +135,4 @@ T_edges& VectorGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to
 }
 
 
-template class VectorGraph<int, int>;
+template class MatrixGraph<int, int>;
