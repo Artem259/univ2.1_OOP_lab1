@@ -1,8 +1,42 @@
 #include <vector>
 #include <string>
+#include <random>
 #include <cassert>
+#include <stack>
 #include "Graph.h"
 
+
+template <class T_vertices, class T_edges>
+bool MatrixGraph<T_vertices, T_edges>::DFS(unsigned start, const std::vector<std::vector<bool>> &matrix)
+{
+    auto visited = new bool[verticesN]{false};
+    std::stack<unsigned> stack;
+    stack.push(start);
+    unsigned curr;
+    while(!stack.empty())
+    {
+        curr = stack.top();
+        stack.pop();
+        if(!visited[curr])
+        {
+            visited[curr] = true;
+            for(unsigned i=0; i<verticesN; i++)
+            {
+                if(matrix[curr][i]) stack.push(i);
+            }
+        }
+    }
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        if(!visited[i])
+        {
+            delete []visited;
+            return false;
+        }
+    }
+    delete []visited;
+    return true;
+}
 
 template <class T_vertices, class T_edges>
 MatrixGraph<T_vertices, T_edges>::MatrixGraph()
@@ -10,6 +44,18 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph()
     verticesN = 0;
     vertices = {};
     edges = {};
+}
+
+template <class T_vertices, class T_edges>
+MatrixGraph<T_vertices, T_edges>::MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb)
+{
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<unsigned> intRand(minVertices, maxVertices+1);
+    std::uniform_real_distribution<double> doubleRand(0, 1000000);
+    verticesN = intRand(mt);
+    for(unsigned i=0; i<verticesN; i++) this->addVertex(0);
+
 }
 
 template <class T_vertices, class T_edges>

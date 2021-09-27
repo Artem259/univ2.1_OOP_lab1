@@ -8,8 +8,11 @@ private:
     unsigned verticesN;
     std::vector<T_vertices> vertices; //data in vertices
     std::vector<std::vector<T_edges*>> edges; //!connectivity matrix!
+
 public:
-    MatrixGraph(); //constructor
+    bool DFS(unsigned start, const std::vector<std::vector<bool>> &matrix);
+    MatrixGraph(); //empty constructor
+    MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb); //constructor with random number of vertices and edges
     ~MatrixGraph(); //destructor
     void addVertex(T_vertices data); //add a new vertex
     void delVertex(unsigned vertex); //delete a vertex
