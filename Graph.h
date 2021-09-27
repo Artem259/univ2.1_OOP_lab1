@@ -10,10 +10,11 @@ private:
     std::vector<std::vector<T_edges*>> edges; //!connectivity matrix!
 public:
     VectorGraph(); //constructor
+    ~VectorGraph(); //destructor
     void addVertex(T_vertices data); //add a new vertex
     void delVertex(unsigned vertex); //delete a vertex
-    void addEdge(T_edges data); //add a new edge
-    void delEdge(unsigned edge); //delete an edge
+    void addEdge(unsigned from, unsigned to, T_edges data); //add a new edge
+    void delEdge(unsigned from, unsigned to); //delete an edge
     std::string toString(); //get a string representation (connectivity matrix)
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
