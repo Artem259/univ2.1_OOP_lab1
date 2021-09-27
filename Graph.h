@@ -19,7 +19,6 @@ public:
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
-    //T_vertices& operator =(unsigned vertex);
 };
 
 #endif

@@ -59,6 +59,7 @@ void VectorGraph<T_vertices, T_edges>::delVertex(unsigned vertex)
 template <class T_vertices, class T_edges>
 void VectorGraph<T_vertices, T_edges>::addEdge(unsigned from, unsigned to, T_edges data)
 {
+    assert(from<verticesN && to<verticesN);
     assert(!edges[from][to]);
     edges[from][to] = new T_edges(data);
 }
@@ -66,6 +67,7 @@ void VectorGraph<T_vertices, T_edges>::addEdge(unsigned from, unsigned to, T_edg
 template <class T_vertices, class T_edges>
 void VectorGraph<T_vertices, T_edges>::delEdge(unsigned from, unsigned to)
 {
+    assert(from<verticesN && to<verticesN);
     assert(edges[from][to]);
     delete edges[from][to];
     edges[from][to] = nullptr;
@@ -101,8 +103,6 @@ T_edges& VectorGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to
     assert(edges[from][to]);
     return *edges[from][to];
 }
-
-
 
 
 template class VectorGraph<int, int>;
