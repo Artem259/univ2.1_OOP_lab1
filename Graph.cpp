@@ -1,10 +1,11 @@
 #include <vector>
+#include <algorithm>
 #include <string>
 #include <random>
 #include <cassert>
 #include <stack>
 #include <ctime>
-#include <iostream>
+#include <queue>
 #include "Graph.h"
 
 template <class T_vertices, class T_edges>
@@ -37,6 +38,33 @@ bool MatrixGraph<T_vertices, T_edges>::DFS(unsigned start, const std::vector<std
     }
     delete []visited;
     return true;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<unsigned*> MatrixGraph<T_vertices, T_edges>::BFS(unsigned start, unsigned end, const std::vector<std::vector<bool>> &matrix)
+{
+    std::vector<unsigned*> prev{verticesN,nullptr};
+    auto visited = new bool[verticesN]{false};
+    std::queue<unsigned> queue;
+    visited[start] = true;
+    queue.push(start);
+    unsigned curr;
+    while(!queue.empty())
+    {
+        curr = queue.front();
+        queue.pop();
+        for(unsigned i=0; i<verticesN; i++)
+        {
+            if(matrix[curr][i] && !visited[i])
+            {
+                visited[i] = true;
+                queue.push(i);
+                prev[i] = new unsigned{curr};
+                if(i==end) return prev;
+            }
+        }
+    }
+    return prev;
 }
 
 template <class T_vertices, class T_edges>
@@ -224,6 +252,29 @@ bool MatrixGraph<T_vertices, T_edges>::weaklyConnected()
     }
     if(!DFS(0, matrix)) return false;
     return true;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<unsigned> MatrixGraph<T_vertices, T_edges>::getRouteVertices(unsigned from, unsigned to)
+{
+    assert(from!=to);
+    std::vector<unsigned> route;
+    std::vector<unsigned*> prev = this->BFS(from, to, this->getMatrix());
+    unsigned curr;
+    if(prev[to])
+    {
+        route.push_back(to);
+        curr = *prev[to];
+        while(curr!=from)
+        {
+            route.push_back(curr);
+            curr = *prev[curr];
+        }
+        route.push_back(from);
+    }
+    for(auto &i: prev) delete i;
+    std::reverse(route.begin(), route.end());
+    return route;
 }
 
 template <class T_vertices, class T_edges>

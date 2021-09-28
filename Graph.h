@@ -10,6 +10,7 @@ private:
     std::vector<std::vector<T_edges*>> edges; //!connectivity matrix!
 
     bool DFS(unsigned start, const std::vector<std::vector<bool>> &matrix);
+    std::vector<unsigned*> BFS(unsigned start,  unsigned end, const std::vector<std::vector<bool>> &matrix);
 public:
     MatrixGraph(); //empty constructor
     ~MatrixGraph(); //destructor
@@ -26,6 +27,8 @@ public:
     std::string getStringMatrix(); //return a string representation of adjacency matrix
     bool stronglyConnected(); //checks if the graph is strongly connected
     bool weaklyConnected(); //checks if the graph is weakly connected
+    std::vector<unsigned> getRouteVertices(unsigned from, unsigned to);
+    unsigned getRouteLength(unsigned from, unsigned to);
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
