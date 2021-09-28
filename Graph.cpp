@@ -4,6 +4,7 @@
 #include <cassert>
 #include <stack>
 #include <ctime>
+#include <iostream>
 #include "Graph.h"
 
 template <class T_vertices, class T_edges>
@@ -47,13 +48,24 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph()
 }
 
 template <class T_vertices, class T_edges>
-MatrixGraph<T_vertices, T_edges>::MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb, T_vertices verticesData, T_edges edgesData)
+MatrixGraph<T_vertices, T_edges>::~MatrixGraph()
+{
+    for(auto &row: edges)
+    {
+        for(auto &col: row)
+        {
+            delete col;
+        }
+    }
+}
+
+template <class T_vertices, class T_edges>
+void MatrixGraph<T_vertices, T_edges>::randomGraph(unsigned minVertices, unsigned maxVertices,
+                                                   double edgeProb, T_vertices verticesData, T_edges edgesData)
 {
     assert(minVertices<=maxVertices);
     assert(edgeProb>=0 && edgeProb<=1);
-    verticesN = 0;
-    vertices = {};
-    edges = {};
+    this->clear();
     std::mt19937 mt(time(nullptr)*1);
     std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
     std::uniform_real_distribution<double> randDouble(0, 1);
@@ -72,18 +84,6 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph(unsigned minVertices, unsigned max
             {
                 addEdge(i, j, edgesData);
             }
-        }
-    }
-}
-
-template <class T_vertices, class T_edges>
-MatrixGraph<T_vertices, T_edges>::~MatrixGraph()
-{
-    for(auto &row: edges)
-    {
-        for(auto &col: row)
-        {
-            delete col;
         }
     }
 }
@@ -135,6 +135,15 @@ void MatrixGraph<T_vertices, T_edges>::delEdge(unsigned from, unsigned to)
     assert(edges[from][to]);
     delete edges[from][to];
     edges[from][to] = nullptr;
+}
+
+template <class T_vertices, class T_edges>
+void MatrixGraph<T_vertices, T_edges>::clear()
+{
+    while(verticesN>0)
+    {
+        this->delVertex(verticesN-1);
+    }
 }
 
 template <class T_vertices, class T_edges>
@@ -191,9 +200,26 @@ bool MatrixGraph<T_vertices, T_edges>::stronglyConnected()
     if(!DFS(0, matrix)) return false;
     for(unsigned i=0; i<verticesN; i++)
     {
-        for(unsigned  j=i; j<verticesN; j++)
+        for(unsigned  j=i+1; j<verticesN; j++)
         {
             swap(matrix[i][j], matrix[j][i]);
+        }
+    }
+    if(!DFS(0, matrix)) return false;
+    return true;
+}
+
+template <class T_vertices, class T_edges>
+bool MatrixGraph<T_vertices, T_edges>::weaklyConnected()
+{
+    assert(verticesN>0);
+    auto matrix = this->getMatrix();
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        for(unsigned  j=i+1; j<verticesN; j++)
+        {
+            matrix[i][j] = matrix[i][j] || matrix[j][i];
+            matrix[j][i] = matrix[i][j];
         }
     }
     if(!DFS(0, matrix)) return false;
