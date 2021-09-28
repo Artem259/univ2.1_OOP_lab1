@@ -278,6 +278,14 @@ std::vector<unsigned> MatrixGraph<T_vertices, T_edges>::getRouteVertices(unsigne
 }
 
 template <class T_vertices, class T_edges>
+unsigned MatrixGraph<T_vertices, T_edges>::getRouteLength(unsigned from, unsigned to)
+{
+    unsigned length = (this->getRouteVertices(from,to)).size();
+    if(length==0) return 0;
+    return length-1;
+}
+
+template <class T_vertices, class T_edges>
 T_vertices& MatrixGraph<T_vertices, T_edges>::operator()(unsigned vertex)
 {
     assert(vertex<verticesN);
