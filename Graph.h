@@ -24,6 +24,8 @@ public:
     unsigned size(); //returns the number of vertices in the graph
     std::vector<std::vector<bool>> getMatrix(); //returns a bool representation of adjacency matrix
     std::string getStringMatrix(); //return a string representation of adjacency matrix
+    bool stronglyConnected(); //checks if the graph is strongly connected
+    bool weaklyConnected(); //checks if the graph is weakly connected
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge

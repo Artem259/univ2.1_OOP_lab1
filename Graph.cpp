@@ -51,14 +51,14 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph(unsigned minVertices, unsigned max
 {
     assert(minVertices<=maxVertices);
     assert(edgeProb>=0 && edgeProb<=1);
+    verticesN = 0;
+    vertices = {};
+    edges = {};
     std::mt19937 mt(time(nullptr)*1);
     std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
     std::uniform_real_distribution<double> randDouble(0, 1);
     unsigned n = randInt(mt);
     double isEdge;
-    verticesN = 0;
-    vertices = {};
-    edges = {};
     for(unsigned i=0; i<n; i++)
     {
         addVertex(verticesData);
@@ -181,6 +181,23 @@ std::string MatrixGraph<T_vertices, T_edges>::getStringMatrix()
         res += "\n";
     }
     return res;
+}
+
+template <class T_vertices, class T_edges>
+bool MatrixGraph<T_vertices, T_edges>::stronglyConnected()
+{
+    assert(verticesN>0);
+    auto matrix = this->getMatrix();
+    if(!DFS(0, matrix)) return false;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        for(unsigned  j=i; j<verticesN; j++)
+        {
+            swap(matrix[i][j], matrix[j][i]);
+        }
+    }
+    if(!DFS(0, matrix)) return false;
+    return true;
 }
 
 template <class T_vertices, class T_edges>

@@ -4,8 +4,7 @@
 
 int main()
 {
-    MatrixGraph<int, int> CLass(11,11,0.5,21,100);
-
+    MatrixGraph<int, int> CLass(10,10,0.75,100500,100500);
     std::cout<<CLass.getStringMatrix();
     return 0;
 }
