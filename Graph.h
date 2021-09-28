@@ -9,10 +9,12 @@ private:
     std::vector<T_vertices> vertices; //data in vertices
     std::vector<std::vector<T_edges*>> edges; //!connectivity matrix!
 
-public:
+    //unsigned nextVertex(std::vector<int>::iterator i);
     bool DFS(unsigned start, const std::vector<std::vector<bool>> &matrix);
+public:
     MatrixGraph(); //empty constructor
-    MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb); //constructor with random number of vertices and edges
+    MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb, T_vertices (*randVertex)(), T_edges (*randEdge)());
+            //constructor with random number of vertices, edges and data
     ~MatrixGraph(); //destructor
     void addVertex(T_vertices data); //add a new vertex
     void delVertex(unsigned vertex); //delete a vertex
@@ -25,6 +27,18 @@ public:
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
+};
+
+
+template <class T_vertices, class T_edges>
+class ListGraph
+{
+private:
+
+
+public:
+
+
 };
 
 #endif
