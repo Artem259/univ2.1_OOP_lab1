@@ -27,8 +27,8 @@ public:
     std::string getStringMatrix(); //return a string representation of adjacency matrix
     bool stronglyConnected(); //checks if the graph is strongly connected
     bool weaklyConnected(); //checks if the graph is weakly connected
-    std::vector<unsigned> getRouteVertices(unsigned from, unsigned to);
-    unsigned getRouteLength(unsigned from, unsigned to);
+    std::vector<unsigned> getRouteVertices(unsigned from, unsigned to); //returns vertices chain between 2 vertices [from-->to]
+    unsigned getRouteLength(unsigned from, unsigned to); //returns number of edges between 2 vertices (or 0, if disconnected)
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
