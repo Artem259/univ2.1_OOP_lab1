@@ -3,6 +3,7 @@
 #include <random>
 #include <cassert>
 #include <stack>
+#include <ctime>
 #include "Graph.h"
 
 template <class T_vertices, class T_edges>
@@ -46,19 +47,21 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph()
 }
 
 template <class T_vertices, class T_edges>
-MatrixGraph<T_vertices, T_edges>::MatrixGraph(unsigned minVertices, unsigned maxVertices,
-                                              double edgeProb, T_vertices (*randVertex)(), T_edges (*randEdge)())
+MatrixGraph<T_vertices, T_edges>::MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb, T_vertices verticesData, T_edges edgesData)
 {
+    assert(minVertices<=maxVertices);
     assert(edgeProb>=0 && edgeProb<=1);
-    std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices+1);
+    std::mt19937 mt(time(nullptr)*1);
+    std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
     std::uniform_real_distribution<double> randDouble(0, 1);
-    verticesN = randInt(mt);
+    unsigned n = randInt(mt);
     double isEdge;
-    for(unsigned i=0; i<verticesN; i++)
+    verticesN = 0;
+    vertices = {};
+    edges = {};
+    for(unsigned i=0; i<n; i++)
     {
-        addVertex(randVertex());
+        addVertex(verticesData);
     }
     for(unsigned i=0; i<verticesN; i++)
     {
@@ -67,7 +70,7 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph(unsigned minVertices, unsigned max
             isEdge = randDouble(mt);
             if(isEdge<edgeProb)
             {
-                addEdge(i, j, randEdge());
+                addEdge(i, j, edgesData);
             }
         }
     }

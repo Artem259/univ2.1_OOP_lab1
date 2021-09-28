@@ -2,19 +2,10 @@
 #include <vector>
 #include "Graph.h"
 
-double a()
-{
-    return 0.1;
-}
-int b()
-{
-    return 1;
-}
-
 int main()
 {
-    MatrixGraph<double, int> CLass(0,10,0.5,a,b);
+    MatrixGraph<int, int> CLass(11,11,0.5,21,100);
 
-    std::cout<<CLass.size()<<"\n";
+    std::cout<<CLass.getStringMatrix();
     return 0;
 }

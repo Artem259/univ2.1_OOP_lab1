@@ -13,8 +13,8 @@ private:
     bool DFS(unsigned start, const std::vector<std::vector<bool>> &matrix);
 public:
     MatrixGraph(); //empty constructor
-    MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb, T_vertices (*randVertex)(), T_edges (*randEdge)());
-            //constructor with random number of vertices, edges and data
+    MatrixGraph(unsigned minVertices, unsigned maxVertices, double edgeProb, T_vertices verticesData, T_edges edgesData);
+            //constructor with random number of vertices and edges
     ~MatrixGraph(); //destructor
     void addVertex(T_vertices data); //add a new vertex
     void delVertex(unsigned vertex); //delete a vertex
