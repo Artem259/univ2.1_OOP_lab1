@@ -41,7 +41,7 @@ bool MatrixGraph<T_vertices, T_edges>::DFS(unsigned start, const std::vector<std
 }
 
 template <class T_vertices, class T_edges>
-std::vector<unsigned*> MatrixGraph<T_vertices, T_edges>::BFS(unsigned start, unsigned end, const std::vector<std::vector<bool>> &matrix)
+std::vector<unsigned*> MatrixGraph<T_vertices, T_edges>::BFS(unsigned start, unsigned end)
 {
     std::vector<unsigned*> prev{verticesN,nullptr};
     auto visited = new bool[verticesN]{false};
@@ -55,7 +55,7 @@ std::vector<unsigned*> MatrixGraph<T_vertices, T_edges>::BFS(unsigned start, uns
         queue.pop();
         for(unsigned i=0; i<verticesN; i++)
         {
-            if(matrix[curr][i] && !visited[i])
+            if(edges[curr][i] && !visited[i])
             {
                 visited[i] = true;
                 queue.push(i);
@@ -78,40 +78,11 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph()
 template <class T_vertices, class T_edges>
 MatrixGraph<T_vertices, T_edges>::~MatrixGraph()
 {
-    for(auto &row: edges)
-    {
-        for(auto &col: row)
-        {
-            delete col;
-        }
-    }
-}
-
-template <class T_vertices, class T_edges>
-void MatrixGraph<T_vertices, T_edges>::randomGraph(unsigned minVertices, unsigned maxVertices,
-                                                   double edgeProb, T_vertices verticesData, T_edges edgesData)
-{
-    assert(minVertices<=maxVertices);
-    assert(edgeProb>=0 && edgeProb<=1);
-    this->clear();
-    std::mt19937 mt(time(nullptr)*1);
-    std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
-    std::uniform_real_distribution<double> randDouble(0, 1);
-    unsigned n = randInt(mt);
-    double isEdge;
-    for(unsigned i=0; i<n; i++)
-    {
-        addVertex(verticesData);
-    }
     for(unsigned i=0; i<verticesN; i++)
     {
         for(unsigned j=0; j<verticesN; j++)
         {
-            isEdge = randDouble(mt);
-            if(isEdge<edgeProb)
-            {
-                addEdge(i, j, edgesData);
-            }
+            delete edges[i][j];
         }
     }
 }
@@ -189,15 +160,29 @@ unsigned MatrixGraph<T_vertices, T_edges>::size()
 }
 
 template <class T_vertices, class T_edges>
+std::vector<std::vector<unsigned>> MatrixGraph<T_vertices, T_edges>::getEdges()
+{
+    std::vector<std::vector<unsigned>> res;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        for(unsigned j=0; j<verticesN; j++)
+        {
+            if(edges[i][j]) res.push_back({i,j});
+        }
+    }
+    return res;
+}
+
+template <class T_vertices, class T_edges>
 std::vector<std::vector<bool>> MatrixGraph<T_vertices, T_edges>::getMatrix()
 {
     std::vector<std::vector<bool>> res;
-    for(auto &row: edges)
+    for(unsigned i=0; i<verticesN; i++)
     {
         res.emplace_back();
-        for(auto &col: row)
+        for(unsigned j=0; j<verticesN; j++)
         {
-            if(col) res.back().push_back(true);
+            if(edges[i][j]) res.back().push_back(true);
             else res.back().push_back(false);
         }
     }
@@ -205,19 +190,48 @@ std::vector<std::vector<bool>> MatrixGraph<T_vertices, T_edges>::getMatrix()
 }
 
 template <class T_vertices, class T_edges>
-std::string MatrixGraph<T_vertices, T_edges>::getStringMatrix()
+std::string MatrixGraph<T_vertices, T_edges>::getString()
 {
     std::string res;
-    for(auto &row: edges)
+    for(unsigned i=0; i<verticesN; i++)
     {
-        for(auto &col: row)
+        for(unsigned j=0; j<verticesN; j++)
         {
-            if(col) res += "1 ";
+            if(edges[i][j]) res += "1 ";
             else res += "0 ";
         }
         res += "\n";
     }
     return res;
+}
+
+template <class T_vertices, class T_edges>
+void MatrixGraph<T_vertices, T_edges>::randomGraph(unsigned minVertices, unsigned maxVertices,
+                                                   double edgeProb, T_vertices verticesData, T_edges edgesData)
+{
+    assert(minVertices<=maxVertices);
+    assert(edgeProb>=0 && edgeProb<=1);
+    this->clear();
+    std::mt19937 mt(time(nullptr)*1);
+    std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
+    std::uniform_real_distribution<double> randDouble(0, 1);
+    unsigned n = randInt(mt);
+    double isEdge;
+    for(unsigned i=0; i<n; i++)
+    {
+        addVertex(verticesData);
+    }
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        for(unsigned j=0; j<verticesN; j++)
+        {
+            isEdge = randDouble(mt);
+            if(isEdge<edgeProb)
+            {
+                addEdge(i, j, edgesData);
+            }
+        }
+    }
 }
 
 template <class T_vertices, class T_edges>
@@ -259,7 +273,7 @@ std::vector<unsigned> MatrixGraph<T_vertices, T_edges>::getRouteVertices(unsigne
 {
     assert(from!=to);
     std::vector<unsigned> route;
-    std::vector<unsigned*> prev = this->BFS(from, to, this->getMatrix());
+    std::vector<unsigned*> prev = this->BFS(from, to);
     unsigned curr;
     if(prev[to])
     {
@@ -299,6 +313,358 @@ T_edges& MatrixGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to
     assert(edges[from][to]);
     return *edges[from][to];
 }
+
+
+
+template <class T_vertices, class T_edges>
+bool ListGraph<T_vertices, T_edges>::DFS(unsigned start, const std::vector<std::vector<unsigned>> &list)
+{
+    auto visited = new bool[verticesN]{false};
+    std::stack<unsigned> stack;
+    stack.push(start);
+    unsigned curr, currLen;
+    while(!stack.empty())
+    {
+        curr = stack.top();
+        stack.pop();
+        if(!visited[curr])
+        {
+            visited[curr] = true;
+            currLen = list[curr].size();
+            for(unsigned i=0; i<currLen; i++)
+            {
+                stack.push(list[curr][i]);
+            }
+        }
+    }
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        if(!visited[i])
+        {
+            delete []visited;
+            return false;
+        }
+    }
+    delete []visited;
+    return true;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<unsigned*> ListGraph<T_vertices, T_edges>::BFS(unsigned start, unsigned end)
+{
+    std::vector<unsigned*> prev{verticesN,nullptr};
+    auto visited = new bool[verticesN]{false};
+    std::queue<unsigned> queue;
+    visited[start] = true;
+    queue.push(start);
+    unsigned curr, currLen;
+    while(!queue.empty())
+    {
+        curr = queue.front();
+        queue.pop();
+        currLen = edges[curr].size();
+        for(unsigned i=0; i<currLen; i++)
+        {
+            if(!visited[edges[curr][i].vertex])
+            {
+                visited[edges[curr][i].vertex] = true;
+                queue.push(edges[curr][i].vertex);
+                prev[edges[curr][i].vertex] = new unsigned{curr};
+                if(edges[curr][i].vertex==end) return prev;
+            }
+        }
+    }
+    return prev;
+}
+
+template <class T_vertices, class T_edges>
+ListGraph<T_vertices, T_edges>::ListGraph()
+{
+    verticesN = 0;
+    vertices = {};
+    edges = {};
+}
+
+template <class T_vertices, class T_edges>
+ListGraph<T_vertices, T_edges>::~ListGraph()
+{
+    unsigned currLen;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        currLen = edges[i].size();
+        for(unsigned j=0; j<currLen; j++)
+        {
+            delete edges[i][j].data;
+        }
+    }
+}
+
+template <class T_vertices, class T_edges>
+void ListGraph<T_vertices, T_edges>::addVertex(T_vertices data)
+{
+    vertices.push_back(data);
+    edges.push_back({});
+    verticesN++;
+}
+
+template <class T_vertices, class T_edges>
+void ListGraph<T_vertices, T_edges>::delVertex(unsigned vertex)
+{
+    assert(vertex<verticesN);
+    vertices.erase(vertices.begin()+vertex); //erasing vertex (with data)
+    //deleting data in all edges FROM vertex
+    for(auto i = edges[vertex].begin(); i < edges[vertex].end(); i++)
+    {
+        delete (*i).data;
+    }
+    edges.erase(edges.begin()+vertex); //erasing row from the connectivity list
+    verticesN--;
+    //deleting data in all edges TO vertex, decrement all next vertices
+    unsigned currLen;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        currLen = edges[i].size();
+        for(unsigned j=0; j<currLen; j++)
+        {
+            if(edges[i][j].vertex==vertex)
+            {
+                delete edges[i][j].data;
+                edges[i].erase(edges[i].begin()+j);
+                j--;
+            }
+            else if(edges[i][j].vertex>vertex)
+            {
+                edges[i][j].vertex--;
+            }
+        }
+    }
+}
+
+template <class T_vertices, class T_edges>
+void ListGraph<T_vertices, T_edges>::addEdge(unsigned from, unsigned to, T_edges data)
+{
+    assert(from<verticesN && to<verticesN);
+    assert(!this->checkEdge(from, to));
+    edges[from].push_back({to, new T_edges(data)});
+}
+
+template <class T_vertices, class T_edges>
+void ListGraph<T_vertices, T_edges>::delEdge(unsigned from, unsigned to)
+{
+    assert(from<verticesN && to<verticesN);
+    unsigned currLen = edges[from].size();
+    for(unsigned i=0; i<currLen; i++)
+    {
+        if(edges[from][i].vertex==to)
+        {
+            delete edges[from][i].data;
+            edges[from].erase(edges[from].begin()+i);
+            return;
+        }
+    }
+    assert(false);
+}
+
+template <class T_vertices, class T_edges>
+void ListGraph<T_vertices, T_edges>::clear()
+{
+    while(verticesN>0)
+    {
+        this->delVertex(verticesN-1);
+    }
+}
+
+template <class T_vertices, class T_edges>
+bool ListGraph<T_vertices, T_edges>::checkEdge(unsigned from, unsigned to)
+{
+    assert(from<verticesN && to<verticesN);
+    unsigned currLen = edges[from].size();
+    for(unsigned i=0; i<currLen; i++)
+    {
+        if(edges[from][i].vertex==to) return true;
+    }
+    return false;
+}
+
+template <class T_vertices, class T_edges>
+unsigned ListGraph<T_vertices, T_edges>::size()
+{
+    return verticesN;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<std::vector<unsigned>> ListGraph<T_vertices, T_edges>::getEdges()
+{
+    std::vector<std::vector<unsigned>> res;
+    unsigned currLen;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        currLen = edges[i].size();
+        for(unsigned j=0; j<currLen; j++)
+        {
+            res.push_back({i,edges[i][j].vertex});
+        }
+    }
+    return res;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<std::vector<unsigned>> ListGraph<T_vertices, T_edges>::getList()
+{
+    std::vector<std::vector<unsigned>> res;
+    unsigned currLen;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        res.emplace_back();
+        currLen = edges[i].size();
+        for(unsigned j=0; j<currLen; j++)
+        {
+            res.back().push_back(edges[i][j].vertex);
+        }
+    }
+    return res;
+}
+
+template <class T_vertices, class T_edges>
+std::string ListGraph<T_vertices, T_edges>::getString()
+{
+    std::string res;
+    unsigned currLen;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        res += std::to_string(i) + ": ";
+        currLen = edges[i].size();
+        for(unsigned j=0; j<currLen; j++)
+        {
+            res += std::to_string(edges[i][j].vertex) + " ";
+        }
+        res += "\n";
+    }
+    return res;
+}
+
+template <class T_vertices, class T_edges>
+void ListGraph<T_vertices, T_edges>::randomGraph(unsigned minVertices, unsigned maxVertices,
+                                                 double edgeProb, T_vertices verticesData, T_edges edgesData)
+{
+    assert(minVertices<=maxVertices);
+    assert(edgeProb>=0 && edgeProb<=1);
+    this->clear();
+    std::mt19937 mt(time(nullptr)*1);
+    std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
+    std::uniform_real_distribution<double> randDouble(0, 1);
+    unsigned n = randInt(mt);
+    double isEdge;
+    for(unsigned i=0; i<n; i++)
+    {
+        this->addVertex(verticesData);
+    }
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        for(unsigned j=0; j<verticesN; j++)
+        {
+            isEdge = randDouble(mt);
+            if(isEdge<edgeProb)
+            {
+                addEdge(i, j, edgesData);
+            }
+        }
+    }
+}
+
+template <class T_vertices, class T_edges>
+bool ListGraph<T_vertices, T_edges>::stronglyConnected()
+{
+    assert(verticesN>0);
+    auto list = this->getList();
+    if(!DFS(0, list)) return false;
+    std::vector<std::vector<unsigned>> list2(verticesN);
+    unsigned currLen;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        currLen = edges[i].size();
+        for(unsigned j=0; j<currLen; j++)
+        {
+            list2[edges[i][j].vertex].push_back(i);
+        }
+    }
+    if(!DFS(0, list2)) return false;
+    return true;
+}
+
+template <class T_vertices, class T_edges>
+bool ListGraph<T_vertices, T_edges>::weaklyConnected()
+{
+    assert(verticesN>0);
+    auto list = this->getList();
+    unsigned currLen;
+    for(unsigned i=0; i<verticesN; i++)
+    {
+        currLen = list[i].size();
+        for(unsigned j=0; j<currLen; j++)
+        {
+            if(!this->checkEdge(list[i][j],i))
+            {
+                list[list[i][j]].push_back(i);
+            }
+        }
+    }
+    if(!DFS(0, list)) return false;
+    return true;
+}
+
+template <class T_vertices, class T_edges>
+std::vector<unsigned> ListGraph<T_vertices, T_edges>::getRouteVertices(unsigned from, unsigned to)
+{
+    assert(from!=to);
+    std::vector<unsigned> route;
+    std::vector<unsigned*> prev = this->BFS(from, to);
+    unsigned curr;
+    if(prev[to])
+    {
+        route.push_back(to);
+        curr = *prev[to];
+        while(curr!=from)
+        {
+            route.push_back(curr);
+            curr = *prev[curr];
+        }
+        route.push_back(from);
+    }
+    for(auto &i: prev) delete i;
+    std::reverse(route.begin(), route.end());
+    return route;
+}
+
+template <class T_vertices, class T_edges>
+unsigned ListGraph<T_vertices, T_edges>::getRouteLength(unsigned from, unsigned to)
+{
+    unsigned length = (this->getRouteVertices(from,to)).size();
+    if(length==0) return 0;
+    return length-1;
+}
+
+template <class T_vertices, class T_edges>
+T_vertices& ListGraph<T_vertices, T_edges>::operator()(unsigned vertex)
+{
+    assert(vertex<verticesN);
+    return vertices[vertex];
+}
+
+template <class T_vertices, class T_edges>
+T_edges& ListGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to)
+{
+    assert(from<verticesN && to<verticesN);
+    unsigned currLen = edges[from].size();
+    for(unsigned i=0; i<currLen; i++)
+    {
+        if(edges[from][i].vertex==to) return *edges[from][i].data;
+    }
+    assert(false);
+}
+
+
+
 
 
 template class MatrixGraph<int, int>;
