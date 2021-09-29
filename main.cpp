@@ -6,6 +6,7 @@ void Test(unsigned iter)
 {
     MatrixGraph<double, double> matrixGraph;
     ListGraph<double, double> listGraph;
+    int seed=0;
     for(unsigned i=0; i<iter; i++)
     {
         std::cout<<"Test "<<i<<": ";
@@ -13,13 +14,13 @@ void Test(unsigned iter)
         {
             case 0:
             {
-                matrixGraph.randomGraph(2,10,0.33,0,0);
+                matrixGraph.randomGraph(2,10,0.33,0,0,seed);
                 listGraph = matrixGraph;
                 break;
             }
             case 1:
             {
-                listGraph.randomGraph(2,10,0.33,0,0);
+                listGraph.randomGraph(2,10,0.33,0,0,seed);
                 matrixGraph = listGraph;
                 break;
             }
@@ -54,6 +55,7 @@ void Test(unsigned iter)
             std::cout<<"FAILED [stronglyConnected]\n";
             return;
         }
+        seed++;
         std::cout<<matrixGraph.size()<<"Completed.\n";
     }
 }
