@@ -8,6 +8,7 @@
 #include <queue>
 #include "Graph.h"
 
+
 template <class T_vertices, class T_edges>
 bool MatrixGraph<T_vertices, T_edges>::DFS(unsigned start, const std::vector<std::vector<bool>> &matrix)
 {
@@ -73,6 +74,13 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph()
     verticesN = 0;
     vertices = {};
     edges = {};
+}
+
+template <class T_vertices, class T_edges>
+MatrixGraph<T_vertices, T_edges>::MatrixGraph(ListGraph<T_vertices, T_edges> &toCopy)
+{
+    verticesN = 0;
+    *this = toCopy;
 }
 
 template <class T_vertices, class T_edges>
@@ -314,6 +322,24 @@ T_edges& MatrixGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to
     return *edges[from][to];
 }
 
+template <class T_vertices, class T_edges>
+MatrixGraph<T_vertices, T_edges>& MatrixGraph<T_vertices, T_edges>::operator=(ListGraph<T_vertices, T_edges> &toCopy)
+{
+    this->clear();
+    unsigned currLen = toCopy.size();
+    for(unsigned i=0; i<currLen; i++)
+    {
+        this->addVertex(toCopy(i));
+    }
+    std::vector<std::vector<unsigned>> edgesCopy = toCopy.getEdges();
+    currLen = edgesCopy.size();
+    for(unsigned i=0; i<currLen; i++)
+    {
+        this->addEdge(edgesCopy[i][0], edgesCopy[i][1], toCopy(edgesCopy[i][0], edgesCopy[i][1]));
+    }
+    return *this;
+}
+
 
 
 template <class T_vertices, class T_edges>
@@ -383,6 +409,13 @@ ListGraph<T_vertices, T_edges>::ListGraph()
     verticesN = 0;
     vertices = {};
     edges = {};
+}
+
+template <class T_vertices, class T_edges>
+ListGraph<T_vertices, T_edges>::ListGraph(MatrixGraph<T_vertices, T_edges> &toCopy)
+{
+    verticesN = 0;
+    *this = toCopy;
 }
 
 template <class T_vertices, class T_edges>
@@ -661,10 +694,26 @@ T_edges& ListGraph<T_vertices, T_edges>::operator()(unsigned from, unsigned to)
         if(edges[from][i].vertex==to) return *edges[from][i].data;
     }
     assert(false);
+    return *edges[0][0].data; //can't be reached
 }
 
-
-
+template <class T_vertices, class T_edges>
+ListGraph<T_vertices, T_edges>& ListGraph<T_vertices, T_edges>::operator=(MatrixGraph<T_vertices, T_edges> &toCopy)
+{
+    this->clear();
+    unsigned currLen = toCopy.size();
+    for(unsigned i=0; i<currLen; i++)
+    {
+        this->addVertex(toCopy(i));
+    }
+    std::vector<std::vector<unsigned>> edgesCopy = toCopy.getEdges();
+    currLen = edgesCopy.size();
+    for(unsigned i=0; i<currLen; i++)
+    {
+        this->addEdge(edgesCopy[i][0], edgesCopy[i][1], toCopy(edgesCopy[i][0], edgesCopy[i][1]));
+    }
+    return *this;
+}
 
 
 template class MatrixGraph<int, int>;

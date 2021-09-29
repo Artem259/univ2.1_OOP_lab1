@@ -3,6 +3,12 @@
 
 
 template <class T_vertices, class T_edges>
+class MatrixGraph;
+template <class T_vertices, class T_edges>
+class ListGraph;
+
+
+template <class T_vertices, class T_edges>
 class MatrixGraph
 {
 private:
@@ -15,6 +21,7 @@ private:
     std::vector<unsigned*> BFS(unsigned start, unsigned end);
 public:
     MatrixGraph(); //empty constructor
+    explicit MatrixGraph(ListGraph<T_vertices, T_edges> &toCopy); //copy constructor
     ~MatrixGraph(); //destructor
     void addVertex(T_vertices data); //add a new vertex
     void delVertex(unsigned vertex); //delete a vertex
@@ -34,8 +41,8 @@ public:
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
+    MatrixGraph& operator=(ListGraph<T_vertices, T_edges> &toCopy);
 };
-
 
 template <class T_vertices, class T_edges>
 class ListGraph
@@ -55,6 +62,7 @@ private:
     std::vector<unsigned*> BFS(unsigned start,  unsigned end);
 public:
     ListGraph(); //empty constructor
+    explicit ListGraph(MatrixGraph<T_vertices, T_edges> &toCopy); //copy constructor
     ~ListGraph(); //destructor
     void addVertex(T_vertices data); //add a new vertex
     void delVertex(unsigned vertex); //delete a vertex
@@ -74,6 +82,7 @@ public:
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
+    ListGraph& operator=(MatrixGraph<T_vertices, T_edges> &toCopy);
 };
 
 
