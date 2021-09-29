@@ -220,7 +220,8 @@ void MatrixGraph<T_vertices, T_edges>::randomGraph(unsigned minVertices, unsigne
     assert(minVertices<=maxVertices);
     assert(edgeProb>=0 && edgeProb<=1);
     this->clear();
-    std::mt19937 mt(time(nullptr)*1);
+    std::random_device rd;
+    std::mt19937 mt(rd());
     std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
     std::uniform_real_distribution<double> randDouble(0, 1);
     unsigned n = randInt(mt);
@@ -464,6 +465,7 @@ void ListGraph<T_vertices, T_edges>::delVertex(unsigned vertex)
                 delete edges[i][j].data;
                 edges[i].erase(edges[i].begin()+j);
                 j--;
+                currLen--;
             }
             else if(edges[i][j].vertex>vertex)
             {
@@ -583,7 +585,8 @@ void ListGraph<T_vertices, T_edges>::randomGraph(unsigned minVertices, unsigned 
     assert(minVertices<=maxVertices);
     assert(edgeProb>=0 && edgeProb<=1);
     this->clear();
-    std::mt19937 mt(time(nullptr)*1);
+    std::random_device rd;
+    std::mt19937 mt(rd());
     std::uniform_int_distribution<unsigned> randInt(minVertices, maxVertices);
     std::uniform_real_distribution<double> randDouble(0, 1);
     unsigned n = randInt(mt);
