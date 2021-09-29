@@ -1,5 +1,5 @@
-#ifndef VECTOR_GRAPH_H
-#define VECTOR_GRAPH_H
+#ifndef GRAPH_H
+#define GRAPH_H
 
 #include <vector>
 #include <algorithm>
