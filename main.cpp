@@ -62,4 +62,5 @@ void Test(unsigned iter)
 int main()
 {
     Test(100);
+    return 0;
 }

@@ -41,7 +41,7 @@ public:
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
-    MatrixGraph& operator=(ListGraph<T_vertices, T_edges> &toCopy);
+    MatrixGraph<T_vertices, T_edges>& operator=(ListGraph<T_vertices, T_edges> &toCopy); //copy ListGraph
 };
 
 template <class T_vertices, class T_edges>
@@ -82,7 +82,7 @@ public:
 
     T_vertices& operator()(unsigned vertex); //get a reference to vertex
     T_edges& operator()(unsigned from, unsigned to); //get a reference to edge
-    ListGraph& operator=(MatrixGraph<T_vertices, T_edges> &toCopy);
+    ListGraph<T_vertices, T_edges>& operator=(MatrixGraph<T_vertices, T_edges> &toCopy); //copy MatrixGraph
 };
 
 
