@@ -54,13 +54,13 @@ void Test(unsigned iter)
             std::cout<<"FAILED [stronglyConnected]\n";
             return;
         }
-        std::cout<<"Completed.\n";
+        std::cout<<matrixGraph.size()<<"Completed.\n";
     }
 }
 
 
 int main()
 {
-    Test(100);
+    Test(100000000);
     return 0;
 }
