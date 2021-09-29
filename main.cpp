@@ -56,7 +56,7 @@ void Test(unsigned iter)
             return;
         }
         seed++;
-        std::cout<<matrixGraph.size()<<"Completed.\n";
+        std::cout<<"Completed.\n";
     }
 }
 
