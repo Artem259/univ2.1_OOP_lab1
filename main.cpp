@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include "Graph.h"
+#include "Geometry.h"
 
 void Test(unsigned iter)
 {
