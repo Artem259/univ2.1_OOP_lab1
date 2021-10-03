@@ -95,6 +95,7 @@ public:
 };
 
 //---------------------------------------------------------------------------------------------------------------//
+// functions related to class MatrixGraph
 
 template <class T_vertices, class T_edges>
 bool MatrixGraph<T_vertices, T_edges>::DFS(unsigned start, const std::vector<std::vector<bool>> &matrix)
@@ -428,6 +429,7 @@ MatrixGraph<T_vertices, T_edges>& MatrixGraph<T_vertices, T_edges>::operator=(Li
 }
 
 //---------------------------------------------------------------------------------------------------------------//
+//functions related to class ListGraph
 
 template <class T_vertices, class T_edges>
 bool ListGraph<T_vertices, T_edges>::DFS(unsigned start, const std::vector<std::vector<unsigned>> &list)

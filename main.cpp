@@ -116,6 +116,10 @@ bool LineAndLine()
     l2.emplace_back(1,1,0);
     res.push_back({0, 0});
 
+    l1.emplace_back(-60,1,58);
+    l2.emplace_back(2,-4);
+    res.push_back({0.931, -2.138});
+
     Point currRes;
     size_t len = res.size();
     for(size_t i=0; i<len; i++)

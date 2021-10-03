@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <cassert>
+#include <cmath>
 
 struct Point;
 class Line;
@@ -34,6 +35,7 @@ public:
     double getB() const;
     double getC() const;
 
+    friend double getAngle(const Line &first, const Line &second);
     friend Point operator &&(const Line &first, const Line &second);
     friend std::vector<Point> operator &&(const Line &line, const Circle &circle);
     friend std::vector<Point> operator &&(const Circle &circle, const Line &line);
@@ -44,12 +46,14 @@ class Circle
 private:
     Point center{};
     double radius;
+
+    Line getTangent(const Point &point) const;
 public:
     Circle(); //(x2)+(y2)=1
     Circle(Point _center, double _radius);
     explicit Circle(double _radius);
     void setCenter(Point _center);
-    void serRadius(double _radius);
+    void setRadius(double _radius);
     Point getCenter() const;
     double getRadius() const;
 
@@ -59,6 +63,7 @@ public:
 };
 
 //---------------------------------------------------------------------------------------------------------------//
+// functions related to class Line
 
 Line::Line()
 {
@@ -121,6 +126,10 @@ double Line::getC() const
     return c;
 }
 
+double getAngle(const Line &first, const Line &second)
+{
+
+}
 Point operator &&(const Line &first, const Line &second)
 {
     assert(!(first.a==second.a && first.b==second.b));
@@ -131,6 +140,7 @@ Point operator &&(const Line &first, const Line &second)
 }
 
 //---------------------------------------------------------------------------------------------------------------//
+// functions related to class Circle
 
 Circle::Circle()
 {
@@ -154,7 +164,7 @@ void Circle::setCenter(Point _center)
 {
     center = _center;
 }
-void Circle::serRadius(double _radius)
+void Circle::setRadius(double _radius)
 {
     radius = _radius;
 }
@@ -168,12 +178,21 @@ double Circle::getRadius() const
     return radius;
 }
 
+Line Circle::getTangent(const Point &point) const
+{
+    Line res;
+    res.setA(point.x-center.x);
+    res.setB(point.y-center.y);
+    res.setC(center.x*center.x+center.y*center.y-radius*radius-center.y*point.y-center.x*point.x);
+    return res;
+}
 std::vector<Point> operator &&(const Circle &first, const Circle &second)
 {
 
 }
 
 //---------------------------------------------------------------------------------------------------------------//
+// additional functions
 
 std::vector<Point> operator &&(const Line &line, const Circle &circle)
 {
