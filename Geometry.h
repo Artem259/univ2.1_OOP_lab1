@@ -1,6 +1,10 @@
 #ifndef GEOMETRY_H
 #define GEOMETRY_H
 
+#include <vector>
+#include <string>
+#include <cassert>
+
 struct Point;
 class Line;
 class Circle;
@@ -9,14 +13,14 @@ class Circle;
 
 struct Point
 {
-    double x;
-    double y;
+    double x = 0;
+    double y = 0;
 };
 
-class Line //format: ax+by+c=0
+class Line
 {
 private:
-    double a,b,c;
+    double a,b,c; //format: ax+by+c=0
 public:
     Line(double _a, double _b, double _c);
     void set(double _a, double _b, double _c);
@@ -26,6 +30,10 @@ public:
     double getA() const;
     double getB() const;
     double getC() const;
+
+    friend Point operator &&(const Line &first, const Line &second);
+    friend std::vector<Point> operator &&(const Line &line, const Circle &circle);
+    friend std::vector<Point> operator &&(const Circle &circle, const Line &line);
 };
 
 class Circle
@@ -40,6 +48,10 @@ public:
     void serRadius(double _radius);
     Point getCenter() const;
     double getRadius() const;
+
+    friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
+    friend std::vector<Point> operator &&(const Line &line, const Circle &circle);
+    friend std::vector<Point> operator &&(const Circle &circle, const Line &line);
 };
 
 //---------------------------------------------------------------------------------------------------------------//
@@ -85,6 +97,15 @@ double Line::getC() const
     return c;
 }
 
+Point operator &&(const Line &first, const Line &second)
+{
+    assert(!(first.a==second.a && first.b==second.b));
+    Point res;
+    res.x = (second.b*first.c-first.b*second.c)/(second.a*first.b-first.a*second.b);
+    res.y = -(first.a/first.b)*res.x-(first.c/first.b);
+    return res;
+}
+
 //---------------------------------------------------------------------------------------------------------------//
 
 Circle::Circle(Point _center, double _radius)
@@ -116,6 +137,41 @@ Point Circle::getCenter() const
 double Circle::getRadius() const
 {
     return radius;
+}
+
+std::vector<Point> operator &&(const Circle &first, const Circle &second)
+{
+
+}
+
+//---------------------------------------------------------------------------------------------------------------//
+
+std::vector<Point> operator &&(const Line &line, const Circle &circle)
+{
+    std::vector<Point> res;
+    double a = line.a, b = line.b, c = line.c;
+    double x = circle.center.x, y = circle.center.y, r = circle.radius;
+    double a2 = a*a, b2 = b*b, c2 = c*c;
+    double x2 = x*x, y2 = y*y, r2 = r*r;
+    //A(x2)+B(x)+C=0
+    double A = a2+b2;
+    double B = 2*(a*b*y+a*c-b2*x);
+    double C = b2*x2+b2*y2+2*b*c*y+c2-r2*b2;
+    double D = B*B-4*A*C; //D=b2-4ac
+    if(D<0) return {};
+    double sqrtD = sqrt(D);
+    double X1 = (-B+sqrtD)/(2*A);
+    double X2 = (-B-sqrtD)/(2*A);
+    double Y1 = -(a/b)*X1-(c/b);
+    double Y2 = -(a/b)*X2-(c/b);
+    res.push_back({X1,Y1});
+    if(D==0) return res;
+    res.push_back({X2,Y2});
+    return res;
+}
+std::vector<Point> operator &&(const Circle &circle, const Line &line)
+{
+    return (line && circle);
 }
 
 #endif
