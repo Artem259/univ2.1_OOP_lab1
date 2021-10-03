@@ -87,6 +87,7 @@ bool LineAndLine()
 {
     std::vector<Line> l1, l2;
     std::vector<Point> res;
+
     l1.emplace_back(2,3,-5);
     l2.emplace_back(3,5,-4);
     res.push_back({13,-7});
@@ -131,6 +132,50 @@ bool LineAndLine()
     std::cout<<"\nSection: Passed.\n";
     return true;
 }
+bool LineAndCircle()
+{
+    std::vector<Line> l;
+    std::vector<Circle> c;
+
+    std::vector<std::vector<Point>> res;
+    l.emplace_back(-60,1,58);
+    c.push_back({{4,3},5});
+    res.push_back({{1.084,7.062}, {0.951,-0.962}});
+
+    bool isFound;
+    std::vector<Point> currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = l[i] && c[i];
+        if(res[i].size()!=currRes.size())
+        {
+            std::cout<<"FAILED [size]\n";
+            return false;
+        }
+        for(auto &currResI: currRes)
+        {
+            isFound = false;
+            for(auto &resI: res[i])
+            {
+                if(round(currResI.x*1000)/1000==resI.x && round(currResI.y*1000)/1000==resI.y)
+                {
+                    isFound = true;
+                    break;
+                }
+            }
+            if(!isFound)
+            {
+                std::cout<<"FAILED [value]\n";
+                return false;
+            }
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
 
 
 void Test()
@@ -141,6 +186,9 @@ void Test()
     std::cout<<"--------------------------------\n";
     std::cout<<"Section 2 [Line && Line]:\n\n";
     if(!LineAndLine()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 2 [Line && Circle]:\n\n";
+    if(!LineAndCircle()) return;
     std::cout<<"--------------------------------\n";
 }
 
