@@ -15,6 +15,7 @@ struct Point
 {
     double x = 0;
     double y = 0;
+
 };
 
 class Line
@@ -22,6 +23,7 @@ class Line
 private:
     double a,b,c; //format: ax+by+c=0
 public:
+    Line(); //y-x=0
     Line(double _a, double _b, double _c);
     void set(double _a, double _b, double _c);
     void setA(double _a);
@@ -42,6 +44,7 @@ private:
     Point center{};
     double radius;
 public:
+    Circle(); //(x2)+(y2)=1
     Circle(Point _center, double _radius);
     explicit Circle(double _radius);
     void setCenter(Point _center);
@@ -55,6 +58,13 @@ public:
 };
 
 //---------------------------------------------------------------------------------------------------------------//
+
+Line::Line()
+{
+    a = -1;
+    b = 1;
+    c = 0;
+}
 
 Line::Line(double _a, double _b, double _c)
 {
@@ -107,6 +117,12 @@ Point operator &&(const Line &first, const Line &second)
 }
 
 //---------------------------------------------------------------------------------------------------------------//
+
+Circle::Circle()
+{
+    center = {0,0};
+    radius = 1;
+}
 
 Circle::Circle(Point _center, double _radius)
 {
