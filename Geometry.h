@@ -24,7 +24,9 @@ private:
 public:
     Line(); //y-x=0
     Line(double _a, double _b, double _c);
+    Line(double _k, double _b); //y=kx+b => -kx+y-b=0
     void set(double _a, double _b, double _c);
+    void set(double _k, double _b); //y=kx+b => -kx+y-b=0
     void setA(double _a);
     void setB(double _b);
     void setC(double _c);
@@ -64,13 +66,19 @@ Line::Line()
     b = 1;
     c = 0;
 }
-
 Line::Line(double _a, double _b, double _c)
 {
     assert(!(_a==0 && _b==0));
     a = _a;
     b = _b;
     c = _c;
+}
+Line::Line(double _k, double _b)
+{
+    assert(_k != 0);
+    a = -_k;
+    b = 1;
+    c = -_b;
 }
 
 void Line::set(double _a, double _b, double _c)
@@ -79,6 +87,13 @@ void Line::set(double _a, double _b, double _c)
     a = _a;
     b = _b;
     c = _c;
+}
+void Line::set(double _k, double _b)
+{
+    assert(_k != 0);
+    a = -_k;
+    b = 1;
+    c = -_b;
 }
 void Line::setA(double _a)
 {
@@ -122,7 +137,6 @@ Circle::Circle()
     center = {0,0};
     radius = 1;
 }
-
 Circle::Circle(Point _center, double _radius)
 {
     assert(_radius!=0);
