@@ -112,6 +112,22 @@ bool LineAndLine()
     l2.emplace_back(2,-4);
     res.push_back({0.931, -2.138});
 
+    l1.emplace_back(0,50,-25);
+    l2.emplace_back(0.005,-0.005, 1);
+    res.push_back({-199.5, 0.5});
+
+    l1.emplace_back(50,50,-25);
+    l2.emplace_back(0.005,-0.005, 1);
+    res.push_back({-99.75, 100.25});
+
+    l1.emplace_back(3,4,-5);
+    l2.emplace_back(6,-7, 8);
+    res.push_back({0.067, 1.2});
+
+    l1.emplace_back(0,4,0);
+    l2.emplace_back(1,-7, 1);
+    res.push_back({-1, 0});
+
     Point currRes;
     size_t len = res.size();
     for(size_t i=0; i<len; i++)
@@ -145,6 +161,22 @@ bool LineAndCircle()
     l.emplace_back(0,-1,-7);
     c.push_back({{10,3},10});
     res.push_back({{10,-7}});
+
+    l.emplace_back(0,0);
+    c.push_back({{0,0},1});
+    res.push_back({{-1,0}, {1,0}});
+
+    l.emplace_back(1,4,-1);
+    c.push_back({{0,0},1});
+    res.push_back({{-0.882,0.471}, {1,0}});
+
+    l.emplace_back(1,4,-1);
+    c.push_back({{5,0},1});
+    res.push_back({{5,-1}, {4.529,-0.882}});
+
+    l.emplace_back(1,4.3,-1);
+    c.push_back({{5.2,-3.6},2.59});
+    res.push_back({{6.192,-1.207}, {5.366,-1.015}});
 
     bool isFound;
     std::vector<Point> currRes;

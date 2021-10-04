@@ -17,8 +17,11 @@ struct Point
     double x = 0;
     double y = 0;
 
+    Point operator -() const;
     friend bool operator ==(const Point &first, const Point &second);
     friend bool operator !=(const Point &first, const Point &second);
+    friend Point operator +(const Point &first, const Point &second);
+    friend Point operator -(const Point &first, const Point &second);
 };
 
 class Line
@@ -84,6 +87,10 @@ public:
 //---------------------------------------------------------------------------------------------------------------//
 // functions related to struct Point
 
+Point Point::operator -() const
+{
+    return {-this->x, -this->y};
+}
 bool operator ==(const Point &first, const Point &second)
 {
     return (first.x==second.x && first.y==second.y);
@@ -91,6 +98,14 @@ bool operator ==(const Point &first, const Point &second)
 bool operator !=(const Point &first, const Point &second)
 {
     return !(first==second);
+}
+Point operator +(const Point &first, const Point &second)
+{
+    return {first.x+second.x, first.y+second.y};
+}
+Point operator -(const Point &first, const Point &second)
+{
+    return first+(-second);
 }
 
 //---------------------------------------------------------------------------------------------------------------//
@@ -117,7 +132,6 @@ Line::Line(double _a, double _b, double _c)
 }
 Line::Line(double _k, double _b)
 {
-    assert(_k!=0);
     a = -_k;
     b = 1;
     c = -_b;
@@ -139,7 +153,6 @@ void Line::set(double _a, double _b, double _c)
 }
 void Line::set(double _k, double _b)
 {
-    assert(_k != 0);
     a = -_k;
     b = 1;
     c = -_b;
@@ -216,6 +229,7 @@ bool operator !=(const Line &first, const Line &second)
 Point operator &&(const Line &first, const Line &second)
 {
     assert(!(first.a==second.a && first.b==second.b));
+    assert(!(first.a==0 && second.a==0));
     Point res;
     res.x = (second.b*first.c-first.b*second.c)/(second.a*first.b-first.a*second.b);
     res.y = -(first.a/first.b)*res.x-(first.c/first.b);
@@ -285,6 +299,25 @@ bool operator !=(const Circle &first, const Circle &second)
 std::vector<Point> operator &&(const Circle &first, const Circle &second)
 {
     assert(first!=second);
+    Circle firstTmp = first;
+    Circle secondTmp = second;
+    Point offset = firstTmp.center;
+    firstTmp.center = {0,0};
+    secondTmp.center = secondTmp.center-offset;
+    double x2 = secondTmp.center.x;
+    double y2 = secondTmp.center.y;
+    double r1 = firstTmp.radius;
+    double r2 = secondTmp.radius;
+    Line line;
+    line.setA(-2*x2);
+    line.setB(-2*y2);
+    line.setC(x2*x2+y2*y2+r1*r1-r2*r2);
+    std::vector<Point> points = firstTmp && line;
+    for(auto &point: points)
+    {
+        point = point+offset;
+    }
+    return points;
 }
 
 //---------------------------------------------------------------------------------------------------------------//
