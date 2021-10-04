@@ -341,7 +341,14 @@ Circle Circle::getSymmetric(const Line &line) const
 }
 Circle Circle::getInversion(const Circle &circle) const
 {
-
+    Circle res;
+    double r = circle.radius;
+    double x = circle.getCenter().x;
+    double y = circle.getCenter().y;
+    double s = (r*r)/((center.x-x)*(center.x-x)+(center.y-y)*(center.y-y)-radius*radius);
+    res.setRadius(radius*abs(s));
+    res.setCenter({x+s*(center.x-x), y+s*(center.y-y)});
+    return res;
 }
 Line Circle::getTangent(const Point &point) const
 {
