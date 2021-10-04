@@ -17,6 +17,7 @@ struct Point
     double x = 0;
     double y = 0;
 
+    Point getSymmetric(const Line &line) const;
     Point operator -() const;
     friend bool operator ==(const Point &first, const Point &second);
     friend bool operator !=(const Point &first, const Point &second);
@@ -49,6 +50,7 @@ public:
     friend double getAngle(const Line &first, const Line &second);
     friend double getAngle(const Line &line, const Circle &circle);
     friend double getAngle(const Circle &circle, const Line &line);
+    Line getSymmetric(const Line &line) const;
     friend bool operator ==(const Line &first, const Line &second);
     friend bool operator !=(const Line &first, const Line &second);
     friend Point operator &&(const Line &first, const Line &second);
@@ -77,6 +79,7 @@ public:
     friend double getAngle(const Circle &first, const Circle &second);
     friend double getAngle(const Line &line, const Circle &circle);
     friend double getAngle(const Circle &circle, const Line &line);
+    Circle getSymmetric(const Line &line) const;
     friend bool operator ==(const Circle &first, const Circle &second);
     friend bool operator !=(const Circle &first, const Circle &second);
     friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
@@ -87,6 +90,10 @@ public:
 //---------------------------------------------------------------------------------------------------------------//
 // functions related to struct Point
 
+Point Point::getSymmetric(const Line &line) const
+{
+
+}
 Point Point::operator -() const
 {
     return {-this->x, -this->y};
@@ -202,7 +209,9 @@ Line Line::getNormal(const Point &point) const
 double getAngle(const Line &first, const Line &second)
 {
     if(first.a==second.a && first.b==second.b) return -1;
-    return abs(atan(-(first.a/first.b))-atan((-(second.a/second.b))));
+    double res = abs(atan(-(first.a/first.b))-atan(-(second.a/second.b)));
+    if(res>M_PI/2) return M_PI-res;
+    return res;
 }
 bool operator ==(const Line &first, const Line &second)
 {

@@ -304,7 +304,89 @@ bool CircleAndCircle()
     std::cout<<"\nSection: Passed.\n";
     return true;
 }
+bool AngleLineLine()
+{
+    std::vector<Line> l1, l2;
+    std::vector<double> res;
 
+    l1.emplace_back(2,3,-5);
+    l2.emplace_back(2,3,4);
+    res.push_back(-1);
+
+    l1.emplace_back(0,0);
+    l2.emplace_back(1,-10);
+    res.push_back(M_PI/4);
+
+    l1.emplace_back(0,0);
+    l2.emplace_back(0.5,-10);
+    res.push_back(0.463648);
+
+    l1.emplace_back(0.5,6);
+    l2.emplace_back(1,-10);
+    res.push_back(0.321751);
+
+    l1.emplace_back(0.5,6);
+    l2.emplace_back(0.25,100);
+    res.push_back(0.218669);
+
+    double currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = getAngle(l1[i], l2[i]);
+        if(round(res[i]*1000)/1000 != round(currRes*1000)/1000)
+        {
+            std::cout<<"FAILED [value]\n";
+            return false;
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
+bool AngleCircleCircle()
+{
+    std::vector<Circle> c1;
+    std::vector<Circle> c2;
+    std::vector<double> res;
+
+    c1.push_back({{1.44,-1.44},16});
+    c2.push_back({{14,-12.5},15});
+    res.push_back(1.1389);
+
+    c1.push_back({{0,2},5});
+    c2.push_back({{0,-3},2});
+    res.push_back(1.369438);
+
+    c1.push_back({{0,2},4});
+    c2.push_back({{0,-8},6});
+    res.push_back(0);
+
+    c1.push_back({{0,2},4});
+    c2.push_back({{1,-8},6});
+    res.push_back(-1);
+
+    c1.push_back({{5,2},4});
+    c2.push_back({{5,2.1},3.7});
+    res.push_back(-1);
+
+    double currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = getAngle(c1[i], c2[i]);
+        if(round(res[i]*1000)/1000 != round(currRes*1000)/1000)
+        {
+            std::cout<<"FAILED [value]\n";
+            return false;
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
 
 void Test()
 {
@@ -320,6 +402,12 @@ void Test()
     std::cout<<"--------------------------------\n";
     std::cout<<"Section 4 [Circle && Circle]:\n\n";
     if(!CircleAndCircle()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 5 [Angle(Line Line)]:\n\n";
+    if(!AngleLineLine()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 6 [Angle(Circle Circle)]:\n\n";
+    if(!AngleCircleCircle()) return;
     std::cout<<"--------------------------------\n";
 }
 
