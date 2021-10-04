@@ -21,6 +21,7 @@ struct Point
     Point getInversion(const Circle &circle) const;
 
     Point operator -() const;
+    friend double getDistance(const Point &first, const Point &second);
     friend bool operator ==(const Point &first, const Point &second);
     friend bool operator !=(const Point &first, const Point &second);
     friend Point operator +(const Point &first, const Point &second);
@@ -50,6 +51,7 @@ public:
     Line getSymmetric(const Line &line) const;
     Circle getInversion(const Circle &circle) const;
     Line getNormal(const double &x) const;
+    Point getProjection(const Point &point) const;
 
     friend double getAngle(const Line &first, const Line &second);
     friend double getAngle(const Line &line, const Circle &circle);
@@ -97,12 +99,8 @@ public:
 
 Point Point::getSymmetric(const Line &line) const
 {
-    double a = line.getA();
-    double b = line.getB();
-    double c = line.getC();
-    double tmpX = (c*a+a*b*y-b*b*x)/(-a*a-b*b);
-    double tmpY = -(a/b)*tmpX-c/b;
-    return {2*tmpX-x, 2*tmpY-y};
+    Point point = line.getProjection(*this);
+    return {2*point.x-x, 2*point.y-y};
 }
 Point Point::getInversion(const Circle &circle) const
 {
@@ -115,6 +113,10 @@ Point Point::getInversion(const Circle &circle) const
 Point Point::operator -() const
 {
     return {-this->x, -this->y};
+}
+double getDistance(const Point &first, const Point &second)
+{
+    return sqrt((first.x-second.x)*(first.x-second.x)+(first.y-second.y)*(first.y-second.y));
 }
 bool operator ==(const Point &first, const Point &second)
 {
@@ -224,6 +226,15 @@ Line Line::getSymmetric(const Line &line) const
     Point second = {x2, -(a/b)*x2-c/b};
     return {first.getSymmetric(line), second.getSymmetric(line)};
 }
+Circle Line::getInversion(const Circle &circle) const
+{
+    Circle res;
+    Point point = this->getProjection(circle.getCenter());
+    point = point.getInversion(circle);
+    res.setRadius(getDistance(point, circle.getCenter())/2);
+    res.setCenter({(point.x+circle.getCenter().x)/2, (point.y+circle.getCenter().y)/2});
+    return res;
+}
 Line Line::getNormal(const double &x) const
 {
     Line res;
@@ -231,6 +242,14 @@ Line Line::getNormal(const double &x) const
     res.setB(a);
     res.setC(b*x-a*(-(a/b)*x-c/b));
     return res;
+}
+Point Line::getProjection(const Point &point) const
+{
+    double x = point.x;
+    double y = point.y;
+    double tmpX = (c*a+a*b*y-b*b*x)/(-a*a-b*b);
+    double tmpY = -(a/b)*tmpX-c/b;
+    return {tmpX, tmpY};
 }
 
 double getAngle(const Line &first, const Line &second)
@@ -319,6 +338,10 @@ double Circle::getRadius() const
 Circle Circle::getSymmetric(const Line &line) const
 {
     return {center.getSymmetric(line), radius};
+}
+Circle Circle::getInversion(const Circle &circle) const
+{
+
 }
 Line Circle::getTangent(const Point &point) const
 {
