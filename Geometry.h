@@ -48,7 +48,7 @@ public:
     double getB() const;
     double getC() const;
 
-    Line getSymmetric(const Line &line);
+    Line getSymmetric(const Line &line) const;
 
     friend double getAngle(const Line &first, const Line &second);
     friend double getAngle(const Line &line, const Circle &circle);
@@ -206,9 +206,13 @@ double Line::getC() const
     return c;
 }
 
-Line Line::getSymmetric(const Line &line)
+Line Line::getSymmetric(const Line &line) const
 {
-
+    const double x1 = -1;
+    const double x2 = 1;
+    Point first = {x1, -(a/b)*x1-c/b};
+    Point second = {x2, -(a/b)*x2-c/b};
+    return {first.getSymmetric(line), second.getSymmetric(line)};
 }
 Line Line::getNormal(const Point &point) const
 {
@@ -242,7 +246,7 @@ bool operator ==(const Line &first, const Line &second)
     if(aNull && cNull) return true;
     if(aNull) return (first.b/second.b == first.c/second.c);
     if(cNull) return (first.a/second.a == first.b/second.b);
-    return (first.a/second.a == first.b/second.b == first.c/second.c);
+    return (first.a/second.a==first.b/second.b && first.a/second.a==first.c/second.c);
 }
 bool operator !=(const Line &first, const Line &second)
 {
@@ -300,6 +304,11 @@ Point Circle::getCenter() const
 double Circle::getRadius() const
 {
     return radius;
+}
+
+Circle Circle::getSymmetric(const Line &line) const
+{
+    return {center.getSymmetric(line), radius};
 }
 
 Line Circle::getTangent(const Point &point) const

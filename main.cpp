@@ -429,6 +429,90 @@ bool SymmetricPoint()
     std::cout<<"\nSection: Passed.\n";
     return true;
 }
+bool SymmetricLine()
+{
+    std::vector<Line> l1;
+    std::vector<Line> l2;
+    std::vector<Line> res;
+
+    l1.emplace_back(1,0);
+    l2.emplace_back(0,0);
+    res.emplace_back(-1,0);
+
+    l1.emplace_back(3.2,-2,1.12);
+    l2.emplace_back(3.2,-2,1.12);
+    res.emplace_back(3.2,-2,1.12);
+
+    l1.emplace_back(1,-2,-6.5);
+    l2.emplace_back(1,-2,1);
+    res.emplace_back(1,-2,8.5);
+
+    l1.emplace_back(0,-2);
+    l2.emplace_back(0,5);
+    res.emplace_back(0,12);
+
+    l1.emplace_back(1,-2);
+    l2.emplace_back(-1,2);
+    res.emplace_back(1,-2);
+
+    Line currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = l1[i].getSymmetric(l2[i]);
+        if(res[i] != currRes)
+        {
+            std::cout<<"FAILED [value]\n";
+            return false;
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
+bool SymmetricCircle()
+{
+    std::vector<Circle> c;
+    std::vector<Line> l;
+    std::vector<Circle> res;
+
+    c.push_back({{0,0},2.22});
+    l.emplace_back(0,2);
+    res.push_back({{0,4},2.22});
+
+    c.push_back({{0,0}, 0.25});
+    l.emplace_back(1,0);
+    res.push_back({{0,0}, 0.25});
+
+    c.push_back({{0,1},4.2});
+    l.emplace_back(1,0);
+    res.push_back({{1,0},4.2});
+
+    c.push_back({{30,110},1});
+    l.emplace_back(2,0);
+    res.push_back({{70,90},1});
+
+    c.push_back({{3,15},6.66});
+    l.emplace_back(5,-3,8);
+    res.push_back({{double(161)/17,double(189)/17},6.66});
+
+    Circle currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = c[i].getSymmetric(l[i]);
+        if(res[i] != currRes)
+        {
+            std::cout<<"FAILED [value]\n";
+            return false;
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
 
 void Test()
 {
@@ -453,6 +537,12 @@ void Test()
     std::cout<<"--------------------------------\n";
     std::cout<<"Section 7 [Symmetric(Point)]:\n\n";
     if(!SymmetricPoint()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 8 [Symmetric(Line)]:\n\n";
+    if(!SymmetricLine()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 9 [Symmetric(Circle)]:\n\n";
+    if(!SymmetricCircle()) return;
     std::cout<<"--------------------------------\n";
 }
 
