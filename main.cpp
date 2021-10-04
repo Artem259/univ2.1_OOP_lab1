@@ -178,6 +178,18 @@ bool LineAndCircle()
     c.push_back({{5.2,-3.6},2.59});
     res.push_back({{6.192,-1.207}, {5.366,-1.015}});
 
+    l.emplace_back(0,4.3,-2);
+    c.push_back({{5.2,-3.6},2.59});
+    res.emplace_back();
+
+    l.emplace_back(0,4,4);
+    c.push_back({{1,1},2});
+    res.push_back({{1,-1}});
+
+    l.emplace_back(1.25,-1);
+    c.push_back({{1.44,-1.44},16});
+    res.push_back({{10.304,11.88}, {-9.61,-13.012}});
+
     bool isFound;
     std::vector<Point> currRes;
     size_t len = res.size();
@@ -185,6 +197,86 @@ bool LineAndCircle()
     {
         std::cout<<"Test "<<i<<": ";
         currRes = l[i] && c[i];
+        if(res[i].size()!=currRes.size())
+        {
+            std::cout<<"FAILED [size]\n";
+            return false;
+        }
+        for(auto &currResI: currRes)
+        {
+            isFound = false;
+            for(auto &resI: res[i])
+            {
+                if(round(currResI.x*1000)/1000==resI.x && round(currResI.y*1000)/1000==resI.y)
+                {
+                    isFound = true;
+                    break;
+                }
+            }
+            if(!isFound)
+            {
+                std::cout<<"FAILED [value]\n";
+                return false;
+            }
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
+bool CircleAndCircle()
+{
+    std::vector<Circle> c1;
+    std::vector<Circle> c2;
+    std::vector<std::vector<Point>> res;
+
+    c1.push_back({{1.44,-1.44},16});
+    c2.push_back({{14,-12.5},15});
+    res.push_back({{-0.192,-17.357}, {17.022, 2.192}});
+
+    c1.push_back({{0,2},4});
+    c2.push_back({{0,-8},6});
+    res.push_back({{0,-2}});
+
+    c1.push_back({{0,2},4});
+    c2.push_back({{1,-8},6});
+    res.emplace_back();
+
+    c1.push_back({{5,2},4});
+    c2.push_back({{5,2.1},3.7});
+    res.emplace_back();
+
+    c1.push_back({{0,2},4});
+    c2.push_back({{1,3},6});
+    res.emplace_back();
+
+    c1.push_back({{0,2},5});
+    c2.push_back({{1,3},6});
+    res.push_back({{-4.977,2.477}, {0.477,-2.977}});
+
+    c1.push_back({{0,2},5});
+    c2.push_back({{0,-3},2});
+    res.push_back({{-1.96,-2.6}, {1.96,-2.6}});
+
+    c1.push_back({{0,2},5});
+    c2.push_back({{1.1,-2.9},10.03});
+    res.emplace_back();
+
+    c1.push_back({{0,2},5});
+    c2.push_back({{1.1,-2.9},10.02});
+    res.push_back({{-1.287,6.832}, {-0.902,6.918}});
+
+    c1.push_back({{1.1,-1050},0.5});
+    c2.push_back({{0,2},5});
+    res.emplace_back();
+
+    bool isFound;
+    std::vector<Point> currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = c1[i] && c2[i];
         if(res[i].size()!=currRes.size())
         {
             std::cout<<"FAILED [size]\n";
@@ -223,8 +315,11 @@ void Test()
     std::cout<<"Section 2 [Line && Line]:\n\n";
     if(!LineAndLine()) return;
     std::cout<<"--------------------------------\n";
-    std::cout<<"Section 2 [Line && Circle]:\n\n";
+    std::cout<<"Section 3 [Line && Circle]:\n\n";
     if(!LineAndCircle()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 4 [Circle && Circle]:\n\n";
+    if(!CircleAndCircle()) return;
     std::cout<<"--------------------------------\n";
 }
 

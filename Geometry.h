@@ -27,7 +27,7 @@ struct Point
 class Line
 {
 private:
-    double a,b,c; //format: ax+by+c=0
+    double a,b,c; //format: ax+by+c=0, b!=0
 
     Line getNormal(const Point &point) const;
 public:
@@ -299,6 +299,7 @@ bool operator !=(const Circle &first, const Circle &second)
 std::vector<Point> operator &&(const Circle &first, const Circle &second)
 {
     assert(first!=second);
+    assert(!(first.center.y==second.center.y));
     Circle firstTmp = first;
     Circle secondTmp = second;
     Point offset = firstTmp.center;
