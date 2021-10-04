@@ -18,6 +18,7 @@ struct Point
     double y = 0;
 
     Point getSymmetric(const Line &line) const;
+    Point getInversion(const Circle &circle) const;
 
     Point operator -() const;
     friend bool operator ==(const Point &first, const Point &second);
@@ -30,8 +31,6 @@ class Line
 {
 private:
     double a,b,c; //format: ax+by+c=0, b!=0
-
-    Line getNormal(const Point &point) const;
 public:
     Line(); //y-x=0
     Line(const Line &line);
@@ -49,6 +48,8 @@ public:
     double getC() const;
 
     Line getSymmetric(const Line &line) const;
+    Circle getInversion(const Circle &circle) const;
+    Line getNormal(const double &x) const;
 
     friend double getAngle(const Line &first, const Line &second);
     friend double getAngle(const Line &line, const Circle &circle);
@@ -79,6 +80,7 @@ public:
     double getRadius() const;
 
     Circle getSymmetric(const Line &line) const;
+    Circle getInversion(const Circle &circle) const;
 
     friend double getAngle(const Circle &first, const Circle &second);
     friend double getAngle(const Line &line, const Circle &circle);
@@ -101,6 +103,14 @@ Point Point::getSymmetric(const Line &line) const
     double tmpX = (c*a+a*b*y-b*b*x)/(-a*a-b*b);
     double tmpY = -(a/b)*tmpX-c/b;
     return {2*tmpX-x, 2*tmpY-y};
+}
+Point Point::getInversion(const Circle &circle) const
+{
+    Point c = circle.getCenter();
+    double r = circle.getRadius();
+    double resX = c.x+(r*r*(x-c.x))/((x-c.x)*(x-c.x)+(y-c.y)*(y-c.y));
+    double resY = c.y+(r*r*(y-c.y))/((x-c.x)*(x-c.x)+(y-c.y)*(y-c.y));
+    return {resX, resY};
 }
 Point Point::operator -() const
 {
@@ -214,12 +224,12 @@ Line Line::getSymmetric(const Line &line) const
     Point second = {x2, -(a/b)*x2-c/b};
     return {first.getSymmetric(line), second.getSymmetric(line)};
 }
-Line Line::getNormal(const Point &point) const
+Line Line::getNormal(const double &x) const
 {
     Line res;
     res.setA(-b);
     res.setB(a);
-    res.setC(b*point.x-a*point.y);
+    res.setC(b*x-a*(-(a/b)*x-c/b));
     return res;
 }
 
@@ -310,7 +320,6 @@ Circle Circle::getSymmetric(const Line &line) const
 {
     return {center.getSymmetric(line), radius};
 }
-
 Line Circle::getTangent(const Point &point) const
 {
     Line res;
@@ -319,6 +328,7 @@ Line Circle::getTangent(const Point &point) const
     res.setC(center.x*center.x+center.y*center.y-radius*radius-center.y*point.y-center.x*point.x);
     return res;
 }
+
 bool operator ==(const Circle &first, const Circle &second)
 {
     return (first.center==second.center && first.radius==second.radius);
