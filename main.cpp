@@ -387,6 +387,48 @@ bool AngleCircleCircle()
     std::cout<<"\nSection: Passed.\n";
     return true;
 }
+bool SymmetricPoint()
+{
+    std::vector<Point> p;
+    std::vector<Line> l;
+    std::vector<Point> res;
+
+    p.push_back({0,0});
+    l.emplace_back(0,2);
+    res.push_back({0,4});
+
+    p.push_back({0,0});
+    l.emplace_back(1,0);
+    res.push_back({0,0});
+
+    p.push_back({0,1});
+    l.emplace_back(1,0);
+    res.push_back({1,0});
+
+    p.push_back({30,110});
+    l.emplace_back(2,0);
+    res.push_back({70,90});
+
+    p.push_back({3,15});
+    l.emplace_back(5,-3,8);
+    res.push_back({double(161)/17,double(189)/17});
+
+    Point currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = p[i].getSymmetric(l[i]);
+        if(res[i] != currRes)
+        {
+            std::cout<<"FAILED [value]\n";
+            return false;
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
 
 void Test()
 {
@@ -408,6 +450,9 @@ void Test()
     std::cout<<"--------------------------------\n";
     std::cout<<"Section 6 [Angle(Circle Circle)]:\n\n";
     if(!AngleCircleCircle()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 7 [Symmetric(Point)]:\n\n";
+    if(!SymmetricPoint()) return;
     std::cout<<"--------------------------------\n";
 }
 

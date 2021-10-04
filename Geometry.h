@@ -18,6 +18,7 @@ struct Point
     double y = 0;
 
     Point getSymmetric(const Line &line) const;
+
     Point operator -() const;
     friend bool operator ==(const Point &first, const Point &second);
     friend bool operator !=(const Point &first, const Point &second);
@@ -47,10 +48,11 @@ public:
     double getB() const;
     double getC() const;
 
+    Line getSymmetric(const Line &line);
+
     friend double getAngle(const Line &first, const Line &second);
     friend double getAngle(const Line &line, const Circle &circle);
     friend double getAngle(const Circle &circle, const Line &line);
-    Line getSymmetric(const Line &line) const;
     friend bool operator ==(const Line &first, const Line &second);
     friend bool operator !=(const Line &first, const Line &second);
     friend Point operator &&(const Line &first, const Line &second);
@@ -76,10 +78,11 @@ public:
     Point getCenter() const;
     double getRadius() const;
 
+    Circle getSymmetric(const Line &line) const;
+
     friend double getAngle(const Circle &first, const Circle &second);
     friend double getAngle(const Line &line, const Circle &circle);
     friend double getAngle(const Circle &circle, const Line &line);
-    Circle getSymmetric(const Line &line) const;
     friend bool operator ==(const Circle &first, const Circle &second);
     friend bool operator !=(const Circle &first, const Circle &second);
     friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
@@ -92,7 +95,12 @@ public:
 
 Point Point::getSymmetric(const Line &line) const
 {
-
+    double a = line.getA();
+    double b = line.getB();
+    double c = line.getC();
+    double tmpX = (c*a+a*b*y-b*b*x)/(-a*a-b*b);
+    double tmpY = -(a/b)*tmpX-c/b;
+    return {2*tmpX-x, 2*tmpY-y};
 }
 Point Point::operator -() const
 {
@@ -198,6 +206,10 @@ double Line::getC() const
     return c;
 }
 
+Line Line::getSymmetric(const Line &line)
+{
+
+}
 Line Line::getNormal(const Point &point) const
 {
     Line res;
@@ -206,6 +218,7 @@ Line Line::getNormal(const Point &point) const
     res.setC(b*point.x-a*point.y);
     return res;
 }
+
 double getAngle(const Line &first, const Line &second)
 {
     if(first.a==second.a && first.b==second.b) return -1;
