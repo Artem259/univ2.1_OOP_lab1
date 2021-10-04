@@ -96,17 +96,9 @@ bool LineAndLine()
     l2.emplace_back(3,5,-4);
     res.push_back({0.917,0.25});
 
-    l1.emplace_back(0,2,5);
-    l2.emplace_back(3,0,-4);
-    res.push_back({1.333,-2.5});
-
     l1.emplace_back(-1,-1,5);
     l2.emplace_back(6.5,-4,50);
     res.push_back({-2.857,7.857});
-
-    l1.emplace_back(0,1,0);
-    l2.emplace_back(1,0,5);
-    res.push_back({-5,0});
 
     l1.emplace_back(-60,1,58);
     l2.emplace_back(60,1,-59);
@@ -140,11 +132,19 @@ bool LineAndCircle()
 {
     std::vector<Line> l;
     std::vector<Circle> c;
-
     std::vector<std::vector<Point>> res;
+
     l.emplace_back(-60,1,58);
     c.push_back({{4,3},5});
     res.push_back({{1.084,7.062}, {0.951,-0.962}});
+
+    l.emplace_back(2,-4);
+    c.push_back({{10,3},5});
+    res.emplace_back();
+
+    l.emplace_back(0,-1,-7);
+    c.push_back({{10,3},10});
+    res.push_back({{10,-7}});
 
     bool isFound;
     std::vector<Point> currRes;

@@ -16,18 +16,25 @@ struct Point
 {
     double x = 0;
     double y = 0;
+
+    friend bool operator ==(const Point &first, const Point &second);
+    friend bool operator !=(const Point &first, const Point &second);
 };
 
 class Line
 {
 private:
     double a,b,c; //format: ax+by+c=0
+
+    Line getNormal(const Point &point) const;
 public:
     Line(); //y-x=0
     Line(double _a, double _b, double _c);
     Line(double _k, double _b); //y=kx+b => -kx+y-b=0
+    Line(const Point &first, const Point &second);
     void set(double _a, double _b, double _c);
     void set(double _k, double _b); //y=kx+b => -kx+y-b=0
+    void set(const Point &first, const Point &second);
     void setA(double _a);
     void setB(double _b);
     void setC(double _c);
@@ -36,9 +43,12 @@ public:
     double getC() const;
 
     friend double getAngle(const Line &first, const Line &second);
+    friend double getAngle(const Line &line, const Circle &circle);
+    friend double getAngle(const Circle &circle, const Line &line);
     friend Point operator &&(const Line &first, const Line &second);
     friend std::vector<Point> operator &&(const Line &line, const Circle &circle);
     friend std::vector<Point> operator &&(const Circle &circle, const Line &line);
+    friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
 };
 
 class Circle
@@ -57,10 +67,25 @@ public:
     Point getCenter() const;
     double getRadius() const;
 
+    friend double getAngle(const Circle &first, const Circle &second);
+    friend double getAngle(const Line &line, const Circle &circle);
+    friend double getAngle(const Circle &circle, const Line &line);
     friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
     friend std::vector<Point> operator &&(const Line &line, const Circle &circle);
     friend std::vector<Point> operator &&(const Circle &circle, const Line &line);
 };
+
+//---------------------------------------------------------------------------------------------------------------//
+// functions related to struct Point
+
+bool operator ==(const Point &first, const Point &second)
+{
+    return (first.x==second.x && first.y==second.y);
+}
+bool operator !=(const Point &first, const Point &second)
+{
+    return !(first==second);
+}
 
 //---------------------------------------------------------------------------------------------------------------//
 // functions related to class Line
@@ -73,22 +98,29 @@ Line::Line()
 }
 Line::Line(double _a, double _b, double _c)
 {
-    assert(!(_a==0 && _b==0));
+    assert(_b!=0);
     a = _a;
     b = _b;
     c = _c;
 }
 Line::Line(double _k, double _b)
 {
-    assert(_k != 0);
+    assert(_k!=0);
     a = -_k;
     b = 1;
     c = -_b;
 }
+Line::Line(const Point &first, const Point &second)
+{
+    assert(first.x!=second.x);
+    a = second.y-first.y;
+    b = first.x-second.x;
+    c = first.y*second.x-first.x*second.y;
+}
 
 void Line::set(double _a, double _b, double _c)
 {
-    assert(!(_a==0 && _b==0));
+    assert(_b!=0);
     a = _a;
     b = _b;
     c = _c;
@@ -100,12 +132,20 @@ void Line::set(double _k, double _b)
     b = 1;
     c = -_b;
 }
+void Line::set(const Point &first, const Point &second)
+{
+    assert(first.x!=second.x);
+    a = second.y-first.y;
+    b = first.x-second.x;
+    c = first.y*second.x-first.x*second.y;
+}
 void Line::setA(double _a)
 {
     a = _a;
 }
 void Line::setB(double _b)
 {
+    assert(_b!=0);
     b = _b;
 }
 void Line::setC(double _c)
@@ -126,9 +166,18 @@ double Line::getC() const
     return c;
 }
 
+Line Line::getNormal(const Point &point) const
+{
+    Line res;
+    res.setA(-b);
+    res.setB(a);
+    res.setC(b*point.x-a*point.y);
+    return res;
+}
 double getAngle(const Line &first, const Line &second)
 {
-
+    if(first.a==second.a && first.b==second.b) return -1;
+    return abs(atan(-(first.a/first.b))-atan((-(second.a/second.b))));
 }
 Point operator &&(const Line &first, const Line &second)
 {
@@ -188,12 +237,30 @@ Line Circle::getTangent(const Point &point) const
 }
 std::vector<Point> operator &&(const Circle &first, const Circle &second)
 {
-
+    assert(!(first.center==second.center && first.radius==second.radius));
+    Line line(first.center, second.center);
+    return (line.getNormal({(first.center.x+second.center.x)/2, (first.center.y+second.center.y)/2}) && first);
 }
 
 //---------------------------------------------------------------------------------------------------------------//
 // additional functions
 
+double getAngle(const Line &line, const Circle &circle)
+{
+    std::vector<Point> points = line && circle;
+    if(points.empty()) return -1;
+    return getAngle(line, circle.getTangent(points[0]));
+}
+double getAngle(const Circle &circle, const Line &line)
+{
+    return getAngle(line, circle);
+}
+double getAngle(const Circle &first, const Circle &second)
+{
+    std::vector<Point> points = first && second;
+    if(points.empty()) return -1;
+    return getAngle(first.getTangent(points[0]), second.getTangent(points[0]));
+}
 std::vector<Point> operator &&(const Line &line, const Circle &circle)
 {
     std::vector<Point> res;
