@@ -29,6 +29,7 @@ private:
     Line getNormal(const Point &point) const;
 public:
     Line(); //y-x=0
+    Line(const Line &line);
     Line(double _a, double _b, double _c);
     Line(double _k, double _b); //y=kx+b => -kx+y-b=0
     Line(const Point &first, const Point &second);
@@ -60,6 +61,7 @@ private:
     Line getTangent(const Point &point) const;
 public:
     Circle(); //(x2)+(y2)=1
+    Circle(const Circle &circle);
     Circle(Point _center, double _radius);
     explicit Circle(double _radius);
     void setCenter(Point _center);
@@ -95,6 +97,12 @@ Line::Line()
     a = -1;
     b = 1;
     c = 0;
+}
+Line::Line(const Line &line)
+{
+    a = line.a;
+    b = line.b;
+    c = line.c;
 }
 Line::Line(double _a, double _b, double _c)
 {
@@ -195,6 +203,11 @@ Circle::Circle()
 {
     center = {0,0};
     radius = 1;
+}
+Circle::Circle(const Circle &circle)
+{
+    center = circle.center;
+    radius = circle.radius;
 }
 Circle::Circle(Point _center, double _radius)
 {
