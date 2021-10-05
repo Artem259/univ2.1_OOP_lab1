@@ -1,2 +1,1 @@
-Programming in progress...
-Wait, please.
+Completed.
