@@ -7,7 +7,6 @@
 #include <random>
 #include <cassert>
 #include <stack>
-#include <ctime>
 #include <queue>
 
 template <class T_vertices, class T_edges>
@@ -42,7 +41,7 @@ public:
     std::vector<std::vector<unsigned>> getEdges(); //return all edges in graph
     std::string getString(); //return a string representation of adjacency matrix
     void randomGraph(unsigned minVertices, unsigned maxVertices, double edgeProb, T_vertices verticesData, T_edges edgesData, int seed);
-            //fill graph with random number of vertices and random edges
+    //fill graph with random number of vertices and random edges
     bool stronglyConnected(); //checks if the graph is strongly connected
     bool weaklyConnected(); //checks if the graph is weakly connected
     std::vector<unsigned> getRouteVertices(unsigned from, unsigned to); //returns vertices chain between 2 vertices [from-->to]
@@ -83,7 +82,7 @@ public:
     std::vector<std::vector<unsigned>> getEdges(); //return all edges in graph
     std::string getString(); //return a string representation of adjacency list
     void randomGraph(unsigned minVertices, unsigned maxVertices, double edgeProb, T_vertices verticesData, T_edges edgesData, int seed);
-            //fill graph with random number of vertices and random edges
+    //fill graph with random number of vertices and random edges
     bool stronglyConnected(); //checks if the graph is strongly connected
     bool weaklyConnected(); //checks if the graph is weakly connected
     std::vector<unsigned> getRouteVertices(unsigned from, unsigned to); //returns vertices chain between 2 vertices [from-->to]
@@ -174,13 +173,7 @@ MatrixGraph<T_vertices, T_edges>::MatrixGraph(ListGraph<T_vertices, T_edges> &to
 template <class T_vertices, class T_edges>
 MatrixGraph<T_vertices, T_edges>::~MatrixGraph()
 {
-    for(unsigned i=0; i<verticesN; i++)
-    {
-        for(unsigned j=0; j<verticesN; j++)
-        {
-            delete edges[i][j];
-        }
-    }
+    this->clear();
 }
 
 template <class T_vertices, class T_edges>
@@ -510,15 +503,7 @@ ListGraph<T_vertices, T_edges>::ListGraph(MatrixGraph<T_vertices, T_edges> &toCo
 template <class T_vertices, class T_edges>
 ListGraph<T_vertices, T_edges>::~ListGraph()
 {
-    unsigned currLen;
-    for(unsigned i=0; i<verticesN; i++)
-    {
-        currLen = edges[i].size();
-        for(unsigned j=0; j<currLen; j++)
-        {
-            delete edges[i][j].data;
-        }
-    }
+    this->clear();
 }
 
 template <class T_vertices, class T_edges>

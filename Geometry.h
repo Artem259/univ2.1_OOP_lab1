@@ -2,8 +2,8 @@
 #define GEOMETRY_H
 
 #include <vector>
-#include <string>
 #include <cassert>
+#include <string>
 #include <cmath>
 
 struct Point;
@@ -19,8 +19,10 @@ struct Point
 
     Point getSymmetric(const Line &line) const;
     Point getInversion(const Circle &circle) const;
+    std::string getString() const;
 
     Point operator -() const;
+    std::ostream& operator <<(std::ostream &ofs) const;
     friend double getDistance(const Point &first, const Point &second);
     friend bool operator ==(const Point &first, const Point &second);
     friend bool operator !=(const Point &first, const Point &second);
@@ -52,6 +54,8 @@ public:
     Circle getInversion(const Circle &circle) const;
     Line getNormal(const double &x) const;
     Point getProjection(const Point &point) const;
+    std::string getString() const;
+    std::ostream& operator <<(std::ostream &ofs) const;
 
     friend double getAngle(const Line &first, const Line &second);
     friend double getAngle(const Line &line, const Circle &circle);
@@ -83,6 +87,8 @@ public:
 
     Circle getSymmetric(const Line &line) const;
     Circle getInversion(const Circle &circle) const;
+    std::string getString() const;
+    std::ostream& operator <<(std::ostream &ofs) const;
 
     friend double getAngle(const Circle &first, const Circle &second);
     friend double getAngle(const Line &line, const Circle &circle);
@@ -110,9 +116,18 @@ Point Point::getInversion(const Circle &circle) const
     double resY = c.y+(r*r*(y-c.y))/((x-c.x)*(x-c.x)+(y-c.y)*(y-c.y));
     return {resX, resY};
 }
+std::string Point::getString() const
+{
+    return "{"+std::to_string(x)+";"+std::to_string(y)+"}";
+}
 Point Point::operator -() const
 {
     return {-this->x, -this->y};
+}
+std::ostream& Point::operator <<(std::ostream &ofs) const
+{
+    ofs << this->getString();
+    return ofs;
 }
 double getDistance(const Point &first, const Point &second)
 {
@@ -251,7 +266,15 @@ Point Line::getProjection(const Point &point) const
     double tmpY = -(a/b)*tmpX-c/b;
     return {tmpX, tmpY};
 }
-
+std::string Line::getString() const
+{
+    return "("+std::to_string(a)+")x+("+std::to_string(b)+")y+("+std::to_string(c)+")=0";
+}
+std::ostream& Line::operator <<(std::ostream &ofs) const
+{
+    ofs << this->getString();
+    return ofs;
+}
 double getAngle(const Line &first, const Line &second)
 {
     if(first.a==second.a && first.b==second.b) return -1;
@@ -349,6 +372,15 @@ Circle Circle::getInversion(const Circle &circle) const
     res.setRadius(radius*abs(s));
     res.setCenter({x+s*(center.x-x), y+s*(center.y-y)});
     return res;
+}
+std::string Circle::getString() const
+{
+    return "(x-("+std::to_string(center.x)+"))^2 + (y-("+std::to_string(center.x)+"))^2 = ("+std::to_string(radius)+")^2";
+}
+std::ostream& Circle::operator <<(std::ostream &ofs) const
+{
+    ofs << this->getString();
+    return ofs;
 }
 Line Circle::getTangent(const Point &point) const
 {

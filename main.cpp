@@ -592,17 +592,33 @@ void Test()
     std::cout<<"Section 9 [Symmetric(Circle)]:\n\n";
     if(!SymmetricCircle()) return;
     std::cout<<"--------------------------------\n";
-    std::cout<<"Section 10 [Inversion(Line)]:\n\n";
+    /*std::cout<<"Section 10 [Inversion(Line)]:\n\n";
     if(!InversionLine()) return;
     std::cout<<"--------------------------------\n";
     std::cout<<"Section 11 [Inversion(Circle)]:\n\n";
     if(!InversionCircle()) return;
-    std::cout<<"--------------------------------\n";
+    std::cout<<"--------------------------------\n";*/
 }
 
 
 int main()
 {
     Test();
+    std::cout<<"\n\n";
+
+    MatrixGraph<Line, Point> myGraph;
+    myGraph.addVertex({1,0});
+    myGraph.addVertex({3,-4});
+    myGraph.addVertex({0,0});
+    myGraph.addEdge(1,0,{2,3});
+    myGraph.addEdge(0,1,{0,5});
+    myGraph.addEdge(2,1,{0,5});
+
+    std::cout<<myGraph(0,1).getString()<<std::endl;
+    myGraph(0,1)=myGraph(1,0);
+    std::cout<<myGraph(0,1).getString()<<std::endl;
+    std::cout<<getDistance(myGraph(0, 1),myGraph(2,1))<<std::endl;
+
+
     return 0;
 }
