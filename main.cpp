@@ -513,6 +513,54 @@ bool SymmetricCircle()
     std::cout<<"\nSection: Passed.\n";
     return true;
 }
+bool InversionLine()
+{
+    std::vector<Line> l;
+    std::vector<Circle> c;
+    std::vector<Circle> res;
+
+    //some tests (???)
+
+    Circle currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = l[i].getInversion(c[i]);
+        if(res[i] != currRes)
+        {
+            std::cout<<"FAILED [value]\n";
+            return false;
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
+bool InversionCircle()
+{
+    std::vector<Circle> c1;
+    std::vector<Circle> c2;
+    std::vector<Circle> res;
+
+    //some tests (???)
+
+    Circle currRes;
+    size_t len = res.size();
+    for(size_t i=0; i<len; i++)
+    {
+        std::cout<<"Test "<<i<<": ";
+        currRes = c1[i].getInversion(c2[i]);
+        if(res[i] != currRes)
+        {
+            std::cout<<"FAILED [value]\n";
+            return false;
+        }
+        std::cout<<"Passed.\n";
+    }
+    std::cout<<"\nSection: Passed.\n";
+    return true;
+}
 
 void Test()
 {
@@ -543,6 +591,12 @@ void Test()
     std::cout<<"--------------------------------\n";
     std::cout<<"Section 9 [Symmetric(Circle)]:\n\n";
     if(!SymmetricCircle()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 10 [Inversion(Line)]:\n\n";
+    if(!InversionLine()) return;
+    std::cout<<"--------------------------------\n";
+    std::cout<<"Section 11 [Inversion(Circle)]:\n\n";
+    if(!InversionCircle()) return;
     std::cout<<"--------------------------------\n";
 }
 
