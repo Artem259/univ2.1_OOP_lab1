@@ -22,8 +22,8 @@ struct Point
     std::string getString() const;
 
     Point operator -() const;
-    std::ostream& operator <<(std::ostream &ofs) const;
     friend double getDistance(const Point &first, const Point &second);
+    friend std::ostream& operator <<(std::ostream &ofs, const Point &point);
     friend bool operator ==(const Point &first, const Point &second);
     friend bool operator !=(const Point &first, const Point &second);
     friend Point operator +(const Point &first, const Point &second);
@@ -55,14 +55,14 @@ public:
     Line getNormal(const double &x) const;
     Point getProjection(const Point &point) const;
     std::string getString() const;
-    std::ostream& operator <<(std::ostream &ofs) const;
+    friend std::ostream& operator <<(std::ostream &ofs, const Line &line);
+    friend bool operator ==(const Line &first, const Line &second);
+    friend bool operator !=(const Line &first, const Line &second);
+    friend Point operator &&(const Line &first, const Line &second);
 
     friend double getAngle(const Line &first, const Line &second);
     friend double getAngle(const Line &line, const Circle &circle);
     friend double getAngle(const Circle &circle, const Line &line);
-    friend bool operator ==(const Line &first, const Line &second);
-    friend bool operator !=(const Line &first, const Line &second);
-    friend Point operator &&(const Line &first, const Line &second);
     friend std::vector<Point> operator &&(const Line &line, const Circle &circle);
     friend std::vector<Point> operator &&(const Circle &circle, const Line &line);
     friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
@@ -88,14 +88,14 @@ public:
     Circle getSymmetric(const Line &line) const;
     Circle getInversion(const Circle &circle) const;
     std::string getString() const;
-    std::ostream& operator <<(std::ostream &ofs) const;
+    friend std::ostream& operator <<(std::ostream &ofs, const Circle &circle);
+    friend bool operator ==(const Circle &first, const Circle &second);
+    friend bool operator !=(const Circle &first, const Circle &second);
+    friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
 
     friend double getAngle(const Circle &first, const Circle &second);
     friend double getAngle(const Line &line, const Circle &circle);
     friend double getAngle(const Circle &circle, const Line &line);
-    friend bool operator ==(const Circle &first, const Circle &second);
-    friend bool operator !=(const Circle &first, const Circle &second);
-    friend std::vector<Point> operator &&(const Circle &first, const Circle &second);
     friend std::vector<Point> operator &&(const Line &line, const Circle &circle);
     friend std::vector<Point> operator &&(const Circle &circle, const Line &line);
 };
@@ -124,14 +124,14 @@ Point Point::operator -() const
 {
     return {-this->x, -this->y};
 }
-std::ostream& Point::operator <<(std::ostream &ofs) const
-{
-    ofs << this->getString();
-    return ofs;
-}
 double getDistance(const Point &first, const Point &second)
 {
     return sqrt((first.x-second.x)*(first.x-second.x)+(first.y-second.y)*(first.y-second.y));
+}
+std::ostream& operator <<(std::ostream &ofs, const Point &point)
+{
+    ofs << point.getString();
+    return ofs;
 }
 bool operator ==(const Point &first, const Point &second)
 {
@@ -270,9 +270,9 @@ std::string Line::getString() const
 {
     return "("+std::to_string(a)+")x+("+std::to_string(b)+")y+("+std::to_string(c)+")=0";
 }
-std::ostream& Line::operator <<(std::ostream &ofs) const
+std::ostream& operator <<(std::ostream &ofs, const Line &line)
 {
-    ofs << this->getString();
+    ofs << line.getString();
     return ofs;
 }
 double getAngle(const Line &first, const Line &second)
@@ -377,9 +377,9 @@ std::string Circle::getString() const
 {
     return "(x-("+std::to_string(center.x)+"))^2 + (y-("+std::to_string(center.x)+"))^2 = ("+std::to_string(radius)+")^2";
 }
-std::ostream& Circle::operator <<(std::ostream &ofs) const
+std::ostream& operator <<(std::ostream &ofs, const Circle &circle)
 {
-    ofs << this->getString();
+    ofs << circle.getString();
     return ofs;
 }
 Line Circle::getTangent(const Point &point) const

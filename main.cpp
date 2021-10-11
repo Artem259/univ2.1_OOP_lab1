@@ -614,11 +614,18 @@ int main()
     myGraph.addEdge(0,1,{0,5});
     myGraph.addEdge(2,1,{0,5});
 
-    std::cout<<myGraph(0,1).getString()<<std::endl;
+    std::cout<<myGraph(0,1)<<std::endl;
     myGraph(0,1)=myGraph(1,0);
-    std::cout<<myGraph(0,1).getString()<<std::endl;
+    std::cout<<myGraph(0,1)<<std::endl;
     std::cout<<getDistance(myGraph(0, 1),myGraph(2,1))<<std::endl;
 
+    std::cout<<std::endl;
+    Point p{2,-5};
+    std::cout<<p<<std::endl;
+    Line l{2,-5,1};
+    std::cout<<l<<std::endl;
+    Circle c{{2,-5}, 1};
+    std::cout<<c<<std::endl;
 
     return 0;
 }
