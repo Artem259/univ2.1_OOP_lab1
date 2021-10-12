@@ -52,7 +52,6 @@ public:
 
     Line getSymmetric(const Line &line) const;
     Circle getInversion(const Circle &circle) const;
-    Line getNormal(const double &x) const;
     Point getProjection(const Point &point) const;
     std::string getString() const;
     friend std::ostream& operator <<(std::ostream &ofs, const Line &line);
@@ -248,14 +247,6 @@ Circle Line::getInversion(const Circle &circle) const
     point = point.getInversion(circle);
     res.setRadius(getDistance(point, circle.getCenter())/2);
     res.setCenter({(point.x+circle.getCenter().x)/2, (point.y+circle.getCenter().y)/2});
-    return res;
-}
-Line Line::getNormal(const double &x) const
-{
-    Line res;
-    res.setA(-b);
-    res.setB(a);
-    res.setC(b*x-a*(-(a/b)*x-c/b));
     return res;
 }
 Point Line::getProjection(const Point &point) const
