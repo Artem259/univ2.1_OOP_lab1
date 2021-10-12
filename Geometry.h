@@ -366,7 +366,7 @@ Circle Circle::getInversion(const Circle &circle) const
 }
 std::string Circle::getString() const
 {
-    return "(x-("+std::to_string(center.x)+"))^2 + (y-("+std::to_string(center.x)+"))^2 = ("+std::to_string(radius)+")^2";
+    return "(x-("+std::to_string(center.x)+"))^2 + (y-("+std::to_string(center.y)+"))^2 = ("+std::to_string(radius)+")^2";
 }
 std::ostream& operator <<(std::ostream &ofs, const Circle &circle)
 {
